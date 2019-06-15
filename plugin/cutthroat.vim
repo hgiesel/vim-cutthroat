@@ -1,4 +1,3 @@
-
 " command to delete
 command ClearRegisters call <sid>ClearRegisters()
 function! s:ClearRegisters()
@@ -14,12 +13,8 @@ endfunction
 
 function! s:ExamineYank()
 
-  echomsg string(v:event)
-
   if v:event['operator'] ==# 'c' ||
         \ v:event['operator'] ==# 'd'
-
-    echomsg 'change or delete'
 
     call setreg('-', v:event['regcontents'])
     call setreg('"', getreg('0'))
@@ -77,3 +72,22 @@ augroup cutthroat
   autocmd BufEnter * call s:GetYankRegister()
 augroup END
 
+nnoremap <silent> <plug>(CutthroatDelete) <cmd>set operatorfunc=cutthroat#command#delete<cr>g@
+nnoremap <silent> <plug>(CutthroatDeleteLine) <cmd>call cutthroat#command#deleteLine()<cr>
+nnoremap <silent> <plug>(CutthroatDeleteToEOL) <cmd>call cutthroat#command#deleteToEOL()<cr>
+xnoremap <silent> <plug>(CutthroatDeleteVisual) <cmd>call cutthroat#command#delete(visualmode(), 1)<CR>
+
+nnoremap <silent> <plug>(CutthroatChange) <cmd>set operatorfunc=cutthroat#command#change<cr>g@
+nnoremap <silent> <plug>(CutthroatChangeLine) <cmd>call cutthroat#command#changeLine()<cr>
+nnoremap <silent> <plug>(CutthroatChangeToEOL) <cmd>call cutthroat#command#changeToEOL()<cr>
+xnoremap <silent> <plug>(CutthroatChangeVisual) <cmd>call cutthroat#command#change(visualmode(), 1)<CR>
+
+nnoremap <silent> <plug>(CutthroatReplace) <cmd>set operatorfunc=cutthroat#command#replace<cr>g@
+nnoremap <silent> <plug>(CutthroatReplaceLine) <cmd>call cutthroat#command#replaceLine()<cr>
+nnoremap <silent> <plug>(CutthroatReplaceToEOL) <cmd>call cutthroat#command#replaceToEOL()<cr>
+xnoremap <silent> <plug>(CutthroatReplaceVisual) <cmd>call cutthroat#command#replace(visualmode(), 1)<CR>
+
+nnoremap <silent> <plug>(CutthroatSubstitute) <cmd>set operatorfunc=cutthroat#command#substitute<cr>g@
+nnoremap <silent> <plug>(CutthroatSubstituteLine) <cmd>call cutthroat#command#substituteLine()<cr>
+nnoremap <silent> <plug>(CutthroatSubstituteToEOL) <cmd>call cutthroat#command#substituteToEOL()<cr>
+xnoremap <silent> <plug>(CutthroatSubstituteVisual) <cmd>call cutthroat#command#substitute(visualmode(), 1)<CR>

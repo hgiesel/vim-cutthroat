@@ -17,12 +17,10 @@ The previous vim commands, namely `d`, `D`, `dd`, `c`, `C`, `cc`, `x`, `X`, `s`,
 will all become "true deletion" commands, writing exclusively to the "deletion register"
 `"-`.
 
-The yank commands `y`, `Y`, `yy` will utilize the "history registers", .
+The yank commands `y`, `Y`, `yy` will utilize the "history registers", `"0`, `"1`, `"2`, etc.
 
-Additionally a new set of commands is introduced, the "cut" commands, which are explained
-[in the next section](#cutthroat-cut-commands), which under the hood execute
-a yank, followed by another vim command.
-
+Additionally, a new set of commands is introduced, the "cut" commands, which contrast with
+the "true deletion" commands. They are explained [in the next section](#cutthroat-cut-commands).
 
 #### Differences to nelstroms cutlass
 
@@ -34,42 +32,51 @@ shifting the previous content of `"0` to `"1`, `"1` to `"2`,
 and so on, till you reach `"9"`.
 
 Another change is how prefixing a deletion command with a register works,
-like say `"add`. Instead of working exactly like a *cut*-command, writing
+like say `"add`. Instead of working exactly like a *cut* command, writing
 to `""`, `"0`, and `"a`, it will only write to `"a` and `"-`.
-This makes them stand apart from prefixing a *cut*-command,
+This makes them stand apart from prefixing a *cut* command,
 which would yank to `""`, `"0`, and `"a`.
 
 ## Cutthroat Cut Commands
 
-Cutthroat doesn't do any mappings automatically. Any mappings you wish, you'll have to do yourself.
+*Cut* commands under the hood just do a yank, followed by the
+"true deletion" command.  They mostly keep the previous behavior
+of the vim commmands.
 
-| internal mappings                  | usage case                              | suggested mappings
-| ---------------------------------- | --------------------------------------- | ------------------ |
-| `<plug>(CutthroatDelete)`          | equivalent to executing `v<motion>ygvd` | `x`                |
-| `<plug>(CutthroatDeleteLine)`      | equivalent to executing `Vygvd`         | `X`                |
-| `<plug>(CutthroatDeleteToEOL)`     | equivalent to executing `v$ygvd`        | `xx`               |
-| `<plug>(CutthroatChange)`          | equivalent to executing `v<motion>ygvc` | -                  |
-| `<plug>(CutthroatChangeLine)`      | equivalent to executing `Vygvc`         | -                  |
-| `<plug>(CutthroatChangeToEOL)`     | equivalent to executing `v$ygvc`        | -                  |
-| `<plug>(CutthroatReplace)`         | equivalent to executing `v<motion>p`    | `gr`, `s`          |
-| `<plug>(CutthroatReplaceLine)`     | equivalent to executing `Vp`            | `grr`, `ss`        |
-| `<plug>(CutthroatReplaceToEOL)`    | equivalent to executing `v$p`           | `gR`, `S`          |
-| `<plug>(CutthroatSubstitute)`      | equivalent to executing `v<motion>ygvp` | `s`                |
-| `<plug>(CutthroatSubstituteLine)`  | equivalent to executing `Vygvp`         | `ss`               |
-| `<plug>(CutthroatSubstituteToEOL)` | equivalent to executing `v$ygvp`        | `S`                |
+Cutthroat doesn't do any mappings automatically. Any mappings you
+wish, you'll have to do yourself.
 
-An example config would be
+| internal mappings                   | usage case                              | suggested mappings
+| ----------------------------------- | --------------------------------------- | ------------------ |
+| `<plug>(CutthroatDelete)`           | equivalent to executing `v<motion>ygvd` | `x`                |
+| `<plug>(CutthroatDeleteLine)`       | equivalent to executing `Vygvd`         | `X`                |
+| `<plug>(CutthroatDeleteToEOL)`      | equivalent to executing `v$ygvd`        | `xx`               |
+| `<plug>(CutthroatDeleteVisual)`     | equivalent to executing `ygvd`          | `x_v`              |
+| `<plug>(CutthroatChange)`           | equivalent to executing `v<motion>ygvc` | -                  |
+| `<plug>(CutthroatChangeLine)`       | equivalent to executing `Vygvc`         | -                  |
+| `<plug>(CutthroatChangeToEOL)`      | equivalent to executing `v$ygvc`        | -                  |
+| `<plug>(CutthroatChangeVisual)`     | equivalent to executing `ygvc`          | -                  |
+| `<plug>(CutthroatReplace)`          | equivalent to executing `v<motion>p`    | `gr`, `s`          |
+| `<plug>(CutthroatReplaceLine)`      | equivalent to executing `Vp`            | `grr`, `ss`        |
+| `<plug>(CutthroatReplaceToEOL)`     | equivalent to executing `p`             | `gR`, `S`          |
+| `<plug>(CutthroatReplaceVisual)`    | equivalent to executing `ygvc`          | `gr_v`, `s_v`      |
+| `<plug>(CutthroatSubstitute)`       | equivalent to executing `v<motion>ygvp` | `s`                |
+| `<plug>(CutthroatSubstituteLine)`   | equivalent to executing `Vygvp`         | `ss`               |
+| `<plug>(CutthroatSubstituteToEOL)`  | equivalent to executing `v$ygvp`        | `S`                |
+| `<plug>(CutthroatSubstituteVisual)` | equivalent to executing `ygvp`          | `s_v`              |
+
+An example config would be:
 
 ```vim
 nnoremap x <plug>(CutthroatDelete)
 nnoremap xx <plug>(CutthroatDeleteLine)
 nnoremap X <plug>(CutthroatDeleteToEOL)
-xnoremap x <plug>(CutthroatDelete)
+xnoremap x <plug>(CutthroatDeleteVisual)
 
 nnoremap s <plug>(CutthroatReplace)
 nnoremap ss <plug>(CutthroatReplaceLine)
 nnoremap S <plug>(CutthroatReplaceToEOL)
-xnoremap s <plug>(CutthroatReplace)
+xnoremap s <plug>(CutthroatReplaceVisual)
 ```
 
 ## Cutthroat Yank Ring
