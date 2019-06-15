@@ -1,9 +1,25 @@
 
+" command to delete
+command ClearRegisters call <sid>ClearRegisters()
+function! s:ClearRegisters()
+  let l:regs = split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-"', '\zs')
+
+  for r in l:regs
+    call setreg(r, '')
+  endfor
+
+  let g:saved_nine_register = ''
+  let g:saved_yank_register = ''
+endfunction
 
 function! s:ExamineYank()
 
+  echomsg string(v:event)
+
   if v:event['operator'] ==# 'c' ||
         \ v:event['operator'] ==# 'd'
+
+    echomsg 'change or delete'
 
     call setreg('-', v:event['regcontents'])
     call setreg('"', getreg('0'))
@@ -41,6 +57,14 @@ function! s:ExamineYank()
     echom 'I should not happen'
     echom v:event
   endif
+
+  if v:event['regname'] !=# ''
+    echom 'You copied to a register'
+    augroup cutthroat_oneshot
+      autocmd CursorHold
+    augroup END
+  endif
+
 endfunction
 
 function s:GetYankRegister()
