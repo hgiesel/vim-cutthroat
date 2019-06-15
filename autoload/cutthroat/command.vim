@@ -1,7 +1,12 @@
+function! cutthroat#command#prepare(command)
+    let g:opsave = &operatorfunc
+    let &operatorfunc = a:command
+endfunction
+
 """Deleting {{{1
 "
 """
-function cutthroat#command#delete(type, ...)
+function! cutthroat#command#delete(type, ...)
 
   if !a:0
     call setpos('.', getpos("'["))
@@ -19,21 +24,21 @@ function cutthroat#command#delete(type, ...)
 
   normal! ygvd
 
-  set operatorfunc=
+  let &operatorfunc = g:opsave
 endfunction
 
-function cutthroat#command#deleteToEOL()
+function! cutthroat#command#deleteToEOL()
   normal! y$D
 endfunction
 
-function cutthroat#command#deleteLine()
+function! cutthroat#command#deleteLine()
   normal! yydd
 endfunction
 
 """Changing {{{1
 "
 """
-function cutthroat#command#change(type, ...)
+function! cutthroat#command#change(type, ...)
 
   if !a:0
     call setpos('.', getpos("'["))
@@ -51,21 +56,21 @@ function cutthroat#command#change(type, ...)
 
   execute 'normal! ygvc'
 
-  set operatorfunc=
+  let &operatorfunc = g:opsave
 endfunction
 
-function cutthroat#command#changeToEOL()
+function! cutthroat#command#changeToEOL()
     normal! y$C
 endfunction
 
-function cutthroat#command#changeLine()
+function! cutthroat#command#changeLine()
     normal! yycc
 endfunction
 
 """Changing {{{1
 "
 """
-function cutthroat#command#replace(type, ...)
+function! cutthroat#command#replace(type, ...)
 
   if !a:0
     call setpos('.', getpos("'["))
@@ -83,21 +88,21 @@ function cutthroat#command#replace(type, ...)
 
   execute 'normal! p'
 
-  set operatorfunc=
+  let &operatorfunc = g:opsave
 endfunction
 
-function cutthroat#command#replaceToEOL()
+function! cutthroat#command#replaceToEOL()
     normal! v$p
 endfunction
 
-function cutthroat#command#replaceLine()
+function! cutthroat#command#replaceLine()
     normal! Vp
 endfunction
 
 """Substituting {{{1
 "
 """
-function cutthroat#command#substitute(type, ...)
+function! cutthroat#command#substitute(type, ...)
 
   if !a:0
     call setpos('.', getpos("'["))
@@ -115,13 +120,13 @@ function cutthroat#command#substitute(type, ...)
 
   execute 'normal! ygvp'
 
-  set operatorfunc=
+  let &operatorfunc = g:opsave
 endfunction
 
-function cutthroat#command#replaceToEOL()
+function! cutthroat#command#substituteToEOL()
     normal! y$v$p
 endfunction
 
-function cutthroat#command#replaceLine()
+function! cutthroat#command#substituteLine()
     normal! yyVp
 endfunction
