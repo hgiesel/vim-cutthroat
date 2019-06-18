@@ -1,5 +1,5 @@
 " command to delete
-command ClearRegisters call <sid>ClearRegisters()
+command! ClearRegisters call <sid>ClearRegisters()
 function! s:ClearRegisters()
   let l:regs = split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-"', '\zs')
 
@@ -54,10 +54,9 @@ function! s:ExamineYank()
   endif
 
   if v:event['regname'] !=# ''
-    echom 'You copied to a register'
-    augroup cutthroat_oneshot
-      autocmd CursorHold
-    augroup END
+    " augroup cutthroat_oneshot
+    "   autocmd CursorHold
+    " augroup END
   endif
 
 endfunction
