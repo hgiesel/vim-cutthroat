@@ -102,7 +102,7 @@ endfunction
 """Substituting {{{1
 "
 """
-function! cutthroat#command#substitute(type, ...)
+function! cutthroat#command#subtitute(type, ...)
 
   if !a:0
     call setpos('.', getpos("'["))
@@ -118,15 +118,18 @@ function! cutthroat#command#substitute(type, ...)
     call setpos('.', getpos("']"))
   endif
 
-  execute 'normal! ygvp'
+  execute 'normal! p'
+  let @"=@-
 
   let &operatorfunc = g:opsave
 endfunction
 
-function! cutthroat#command#substituteToEOL()
-    normal! y$v$p
+function! cutthroat#command#subtituteToEOL()
+    normal! v$p
+    let @"=@-
 endfunction
 
-function! cutthroat#command#substituteLine()
-    normal! yyVp
+function! cutthroat#command#subtituteLine()
+    normal! Vp
+    let @"=@-
 endfunction

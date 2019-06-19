@@ -46,24 +46,24 @@ of the vim commmands.
 Cutthroat doesn't do any mappings automatically. Any mappings you
 wish, you'll have to do yourself.
 
-| internal mappings                   | usage case                              | suggested mappings
-| ----------------------------------- | --------------------------------------- | ------------------ |
-| `<plug>(CutthroatDelete)`           | equivalent to executing `v<motion>ygvd` | `x`                |
-| `<plug>(CutthroatDeleteLine)`       | equivalent to executing `Vygvd`         | `X`                |
-| `<plug>(CutthroatDeleteToEOL)`      | equivalent to executing `v$ygvd`        | `xx`               |
-| `<plug>(CutthroatDeleteVisual)`     | equivalent to executing `ygvd`          | `x_v`              |
-| `<plug>(CutthroatChange)`           | equivalent to executing `v<motion>ygvc` | -                  |
-| `<plug>(CutthroatChangeLine)`       | equivalent to executing `Vygvc`         | -                  |
-| `<plug>(CutthroatChangeToEOL)`      | equivalent to executing `v$ygvc`        | -                  |
-| `<plug>(CutthroatChangeVisual)`     | equivalent to executing `ygvc`          | -                  |
-| `<plug>(CutthroatReplace)`          | equivalent to executing `v<motion>p`    | `gr`, `s`          |
-| `<plug>(CutthroatReplaceLine)`      | equivalent to executing `Vp`            | `grr`, `ss`        |
-| `<plug>(CutthroatReplaceToEOL)`     | equivalent to executing `p`             | `gR`, `S`          |
-| `<plug>(CutthroatReplaceVisual)`    | equivalent to executing `ygvc`          | `gr_v`, `s_v`      |
-| `<plug>(CutthroatSubstitute)`       | equivalent to executing `v<motion>ygvp` | `s`                |
-| `<plug>(CutthroatSubstituteLine)`   | equivalent to executing `Vygvp`         | `ss`               |
-| `<plug>(CutthroatSubstituteToEOL)`  | equivalent to executing `v$ygvp`        | `S`                |
-| `<plug>(CutthroatSubstituteVisual)` | equivalent to executing `ygvp`          | `s_v`              |
+| internal mappings                   | usage case                                         | suggested mappings
+| ----------------------------------- | -------------------------------------------------- | ------------------ |
+| `<plug>(CutthroatDelete)`           | equivalent to executing `v<motion>ygvd`            | `x`                |
+| `<plug>(CutthroatDeleteLine)`       | equivalent to executing `Vygvd`                    | `X`                |
+| `<plug>(CutthroatDeleteToEOL)`      | equivalent to executing `v$ygvd`                   | `xx`               |
+| `<plug>(CutthroatDeleteVisual)`     | equivalent to executing `ygvd`                     | `x_v`              |
+| `<plug>(CutthroatChange)`           | equivalent to executing `v<motion>ygvc`            | -                  |
+| `<plug>(CutthroatChangeLine)`       | equivalent to executing `Vygvc`                    | -                  |
+| `<plug>(CutthroatChangeToEOL)`      | equivalent to executing `v$ygvc`                   | -                  |
+| `<plug>(CutthroatChangeVisual)`     | equivalent to executing `ygvc`                     | -                  |
+| `<plug>(CutthroatReplace)`          | equivalent to executing `v<motion>p`               | `gr`, `s`          |
+| `<plug>(CutthroatReplaceLine)`      | equivalent to executing `Vp`                       | `grr`, `ss`        |
+| `<plug>(CutthroatReplaceToEOL)`     | equivalent to executing `v$p`                      | `gR`, `S`          |
+| `<plug>(CutthroatReplaceVisual)`    | equivalent to executing `p`                        | `gr_v`, `s_v`      |
+| `<plug>(CutthroatSubstitute)`       | equivalent to executing `v<motion>p:set @"=@-<cr>` | `s`                |
+| `<plug>(CutthroatSubstituteLine)`   | equivalent to executing `Vp:set @"=@-<cr>`         | `ss`               |
+| `<plug>(CutthroatSubstituteToEOL)`  | equivalent to executing `v$p:set @"=@-<cr>`        | `S`                |
+| `<plug>(CutthroatSubstituteVisual)` | equivalent to executing `p:set @"=@-<cr>`          | `s_v`              |
 
 An example config would be:
 

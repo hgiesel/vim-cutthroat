@@ -103,11 +103,3 @@ nnoremap <silent> <plug>(CutthroatSubstitute) <cmd>call cutthroat#command#prepar
 nnoremap <silent> <plug>(CutthroatSubstituteLine) <cmd>call cutthroat#command#substituteLine()<cr>
 nnoremap <silent> <plug>(CutthroatSubstituteToEOL) <cmd>call cutthroat#command#substituteToEOL()<cr>
 xnoremap <silent> <plug>(CutthroatSubstituteVisual) <cmd>call cutthroat#command#substitute(visualmode(), 1)<CR>
-
-nmap x <plug>(CutthroatDelete)
-nmap xx <plug>(CutthroatDeleteLine)
-nmap X <plug>(CutthroatDeleteToEOL)
-
-nmap s <plug>(CutthroatReplace)
-nmap ss <plug>(CutthroatReplaceLine)
-nmap S <plug>(CutthroatReplaceToEOL)
