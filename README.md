@@ -2,9 +2,9 @@
 
 A simple plugin implementing cutlass-mode.
 
-. [Cutthroat Cutlass mode](#cutthroat-cutlass-mode)
-. [Cutthroat Commands](#cutthroat-commands)
-. [Cutthroat Yank-Ring](#cutthroat-yank-ring)
+1. [Cutthroat Cutlass mode](#cutthroat-cutlass-mode)
+1. [Cutthroat Commands](#cutthroat-cut-commands)
+1. [Cutthroat Yank-Ring](#cutthroat-yank-ring)
 
 Does not behave well with yanking to named registers until [this](https://github.com/neovim/neovim/issues/10225) is fixed.
 
