@@ -1,6 +1,6 @@
 " command to delete
 command! ClearRegisters call <sid>ClearRegisters()
-function! s:ClearRegisters()
+function! s:ClearRegisters() abort
   let l:regs = split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-"', '\zs')
 
   for r in l:regs
@@ -11,7 +11,7 @@ function! s:ClearRegisters()
   let g:saved_yank_register = ''
 endfunction
 
-function! s:ExamineYank()
+function! s:ExamineYank() abort
 
   if v:event['operator'] ==# 'c' ||
         \ v:event['operator'] ==# 'd'
@@ -61,11 +61,11 @@ function! s:ExamineYank()
 
 endfunction
 
-function! s:GetYankRegister()
+function! s:GetYankRegister() abort
   let g:saved_yank_register = getreg('0')
 endfunction
 
-function! s:CreateYankRing(size)
+function! s:CreateYankRing(size) abort
 
   let g:yankring = {}
   for i in range(10 + a:size)
@@ -84,22 +84,24 @@ augroup cutthroat
   autocmd CursorMoved * call s:CreateYankRing(5)
 augroup END
 
-nnoremap <silent> <plug>(CutthroatDelete) <cmd>call cutthroat#command#prepare('cutthroat#command#delete')<cr>g@
-nnoremap <silent> <plug>(CutthroatDeleteLine) <cmd>call cutthroat#command#deleteLine()<cr>
-nnoremap <silent> <plug>(CutthroatDeleteToEOL) <cmd>call cutthroat#command#deleteToEOL()<cr>
-xnoremap <silent> <plug>(CutthroatDeleteVisual) <cmd>call cutthroat#command#delete(visualmode(), 1)<CR>
+nmap <silent> <plug>(CutthroatDelete) <cmd>call cutthroat#command#prepare('cutthroat#command#delete')<cr>g@
+nmap <silent> <plug>(CutthroatDeleteLine) <cmd>call cutthroat#command#deleteLine()<cr>
+nmap <silent> <plug>(CutthroatDeleteToEOL) <cmd>call cutthroat#command#deleteToEOL()<cr>
+xmap <silent> <plug>(CutthroatDeleteVisual) <cmd>call cutthroat#command#delete(visualmode(), 1)<CR>
 
-nnoremap <silent> <plug>(CutthroatChange) <cmd>call cutthroat#command#prepare('cutthroat#command#change')<cr>g@
-nnoremap <silent> <plug>(CutthroatChangeLine) <cmd>call cutthroat#command#changeLine()<cr>
-nnoremap <silent> <plug>(CutthroatChangeToEOL) <cmd>call cutthroat#command#changeToEOL()<cr>
-xnoremap <silent> <plug>(CutthroatChangeVisual) <cmd>call cutthroat#command#change(visualmode(), 1)<CR>
+nmap <silent> <plug>(CutthroatChange) <cmd>call cutthroat#command#prepare('cutthroat#command#change')<cr>g@
+nmap <silent> <plug>(CutthroatChangeLine) <cmd>call cutthroat#command#changeLine()<cr>
+nmap <silent> <plug>(CutthroatChangeToEOL) <cmd>call cutthroat#command#changeToEOL()<cr>
+xmap <silent> <plug>(CutthroatChangeVisual) <cmd>call cutthroat#command#change(visualmode(), 1)<CR>
 
-nnoremap <silent> <plug>(CutthroatReplace) <cmd>call cutthroat#command#prepare('cutthroat#command#replace')<cr>g@
-nnoremap <silent> <plug>(CutthroatReplaceLine) <cmd>call cutthroat#command#replaceLine()<cr>
-nnoremap <silent> <plug>(CutthroatReplaceToEOL) <cmd>call cutthroat#command#replaceToEOL()<cr>
-xnoremap <silent> <plug>(CutthroatReplaceVisual) <cmd>call cutthroat#command#replace(visualmode(), 1)<CR>
+nmap <silent> <plug>(CutthroatReplace) <cmd>call cutthroat#command#prepare('cutthroat#command#replace')<cr>g@
+nmap <silent> <plug>(CutthroatReplaceLine) <cmd>call cutthroat#command#replaceLine()<cr>
+nmap <silent> <plug>(CutthroatReplaceToEOL) <cmd>call cutthroat#command#replaceToEOL()<cr>
+xmap <silent> <plug>(CutthroatReplaceVisual) <cmd>call cutthroat#command#replace(visualmode(), 1)<CR>
 
-nnoremap <silent> <plug>(CutthroatSubstitute) <cmd>call cutthroat#command#prepare('cutthroat#command#substitute')<cr>g@
-nnoremap <silent> <plug>(CutthroatSubstituteLine) <cmd>call cutthroat#command#substituteLine()<cr>
-nnoremap <silent> <plug>(CutthroatSubstituteToEOL) <cmd>call cutthroat#command#substituteToEOL()<cr>
-xnoremap <silent> <plug>(CutthroatSubstituteVisual) <cmd>call cutthroat#command#substitute(visualmode(), 1)<CR>
+nmap <silent> <plug>(CutthroatSubstitute) <cmd>call cutthroat#command#prepare('cutthroat#command#substitute')<cr>g@
+nmap <silent> <plug>(CutthroatSubstituteLine) <cmd>call cutthroat#command#substituteLine()<cr>
+nmap <silent> <plug>(CutthroatSubstituteToEOL) <cmd>call cutthroat#command#substituteToEOL()<cr>
+xmap <silent> <plug>(CutthroatSubstituteVisual) <cmd>call cutthroat#command#substitute(visualmode(), 1)<cr>
+
+nmap <silent> <plug>(CutthroatYankring) <cmd>call cutthroat#yankring#enable()<cr>
