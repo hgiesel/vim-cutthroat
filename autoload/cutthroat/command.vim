@@ -1,6 +1,6 @@
 function! cutthroat#command#prepare(command) abort
-    let g:opsave = &operatorfunc
-    let &operatorfunc = a:command
+  let g:opsave = &operatorfunc
+  let &operatorfunc = a:command
 endfunction
 
 """Deleting {{{1
@@ -8,34 +8,34 @@ endfunction
 """
 function! cutthroat#command#delete(type, ...) abort
 
-    if !a:0
-        call setpos('.', getpos("'["))
+  if !a:0
+    call setpos('.', getpos("'["))
 
-        if a:type ==# 'char'
-            normal! v
-        elseif a:type ==# 'line'
-            normal! V
-        else " a:type ==# 'block'
-            execute "normal! \<c-v>"
-        endif
-
-        call setpos('.', getpos("']"))
+    if a:type ==# 'char'
+      normal! v
+    elseif a:type ==# 'line'
+      normal! V
+    else " a:type ==# 'block'
+      execute "normal! \<c-v>"
     endif
 
-    normal! ygvd
+    call setpos('.', getpos("']"))
+  endif
 
-    if !a:0
-        let &operatorfunc = g:opsave
-    endif
+  normal! ygvd
+
+  if !a:0
+    let &operatorfunc = g:opsave
+  endif
 
 endfunction
 
 function! cutthroat#command#deleteToEOL() abort
-    normal! y$D
+  normal! y$D
 endfunction
 
 function! cutthroat#command#deleteLine() abort
-    normal! yydd
+  normal! yydd
 endfunction
 
 """Changing {{{1
@@ -43,33 +43,33 @@ endfunction
 """
 function! cutthroat#command#change(type, ...) abort
 
-    if !a:0
-        call setpos('.', getpos("'["))
+  if !a:0
+    call setpos('.', getpos("'["))
 
-        if a:type ==# 'char'
-            normal! v
-        elseif a:type ==# 'line'
-            normal! V
-        else " a:type ==# 'block'
-            execute "normal! \<c-v>"
-        endif
-
-        call setpos('.', getpos("']"))
+    if a:type ==# 'char'
+      normal! v
+    elseif a:type ==# 'line'
+      normal! V
+    else " a:type ==# 'block'
+      execute "normal! \<c-v>"
     endif
 
-    execute 'normal! ygvc'
+    call setpos('.', getpos("']"))
+  endif
 
-    if !a:0
-        let &operatorfunc = g:opsave
-    endif
+  execute 'normal! ygvc'
+
+  if !a:0
+    let &operatorfunc = g:opsave
+  endif
 endfunction
 
 function! cutthroat#command#changeToEOL() abort
-    normal! y$C
+  normal! y$C
 endfunction
 
 function! cutthroat#command#changeLine() abort
-    normal! yycc
+  normal! yycc
 endfunction
 
 """Changing {{{1
@@ -77,33 +77,33 @@ endfunction
 """
 function! cutthroat#command#replace(type, ...) abort
 
-    if !a:0
-        call setpos('.', getpos("'["))
+  if !a:0
+    call setpos('.', getpos("'["))
 
-        if a:type ==# 'char'
-            normal! v
-        elseif a:type ==# 'line'
-            normal! V
-        else " a:type ==# 'block'
-            execute "normal! \<c-v>"
-        endif
-
-        call setpos('.', getpos("']"))
+    if a:type ==# 'char'
+      normal! v
+    elseif a:type ==# 'line'
+      normal! V
+    else " a:type ==# 'block'
+      execute "normal! \<c-v>"
     endif
 
-    execute 'normal! p'
+    call setpos('.', getpos("']"))
+  endif
 
-    if !a:0
-        let &operatorfunc = g:opsave
-    endif
+  execute 'normal! p'
+
+  if !a:0
+    let &operatorfunc = g:opsave
+  endif
 endfunction
 
 function! cutthroat#command#replaceToEOL() abort
-    normal! v$p
+  normal! v$p
 endfunction
 
 function! cutthroat#command#replaceLine() abort
-    normal! Vp
+  normal! Vp
 endfunction
 
 """Substituting {{{1
@@ -111,34 +111,34 @@ endfunction
 """
 function! cutthroat#command#subtitute(type, ...) abort
 
-    if !a:0
-        call setpos('.', getpos("'["))
+  if !a:0
+    call setpos('.', getpos("'["))
 
-        if a:type ==# 'char'
-            normal! v
-        elseif a:type ==# 'line'
-            normal! V
-        else " a:type ==# 'block'
-            execute "normal! \<c-v>"
-        endif
-
-        call setpos('.', getpos("']"))
+    if a:type ==# 'char'
+      normal! v
+    elseif a:type ==# 'line'
+      normal! V
+    else " a:type ==# 'block'
+      execute "normal! \<c-v>"
     endif
 
-    execute 'normal! p'
-    let @"=@-
+    call setpos('.', getpos("']"))
+  endif
 
-    if !a:0
-        let &operatorfunc = g:opsave
-    endif
+  execute 'normal! p'
+  let @"=@-
+
+  if !a:0
+    let &operatorfunc = g:opsave
+  endif
 endfunction
 
 function! cutthroat#command#subtituteToEOL() abort
-    normal! v$p
-    let @"=@-
+  normal! v$p
+  let @"=@-
 endfunction
 
 function! cutthroat#command#subtituteLine() abort
-    normal! Vp
-    let @"=@-
+  normal! Vp
+  let @"=@-
 endfunction
