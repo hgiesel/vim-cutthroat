@@ -87,21 +87,21 @@ augroup END
 nmap <silent> <plug>(CutthroatDelete) <cmd>call cutthroat#command#prepare('cutthroat#command#delete')<cr>g@
 nmap <silent> <plug>(CutthroatDeleteLine) <cmd>call cutthroat#command#deleteLine()<cr>
 nmap <silent> <plug>(CutthroatDeleteToEOL) <cmd>call cutthroat#command#deleteToEOL()<cr>
-xmap <silent> <plug>(CutthroatDeleteVisual) <cmd>call cutthroat#command#delete(visualmode(), 1)<CR>
+xmap <silent> <plug>(CutthroatDeleteVisual) <cmd>call cutthroat#command#delete(visualmode(), v:true)<cr>
 
 nmap <silent> <plug>(CutthroatChange) <cmd>call cutthroat#command#prepare('cutthroat#command#change')<cr>g@
 nmap <silent> <plug>(CutthroatChangeLine) <cmd>call cutthroat#command#changeLine()<cr>
 nmap <silent> <plug>(CutthroatChangeToEOL) <cmd>call cutthroat#command#changeToEOL()<cr>
-xmap <silent> <plug>(CutthroatChangeVisual) <cmd>call cutthroat#command#change(visualmode(), 1)<CR>
+xmap <silent> <plug>(CutthroatChangeVisual) <cmd>call cutthroat#command#change(visualmode(), v:true)<cr>
 
 nmap <silent> <plug>(CutthroatReplace) <cmd>call cutthroat#command#prepare('cutthroat#command#replace')<cr>g@
 nmap <silent> <plug>(CutthroatReplaceLine) <cmd>call cutthroat#command#replaceLine()<cr>
 nmap <silent> <plug>(CutthroatReplaceToEOL) <cmd>call cutthroat#command#replaceToEOL()<cr>
-xmap <silent> <plug>(CutthroatReplaceVisual) <cmd>call cutthroat#command#replace(visualmode(), 1)<CR>
+xmap <silent> <plug>(CutthroatReplaceVisual) <cmd>call cutthroat#command#replace(visualmode(), v:true)<cr>
 
 nmap <silent> <plug>(CutthroatSubstitute) <cmd>call cutthroat#command#prepare('cutthroat#command#substitute')<cr>g@
 nmap <silent> <plug>(CutthroatSubstituteLine) <cmd>call cutthroat#command#substituteLine()<cr>
 nmap <silent> <plug>(CutthroatSubstituteToEOL) <cmd>call cutthroat#command#substituteToEOL()<cr>
-xmap <silent> <plug>(CutthroatSubstituteVisual) <cmd>call cutthroat#command#substitute(visualmode(), 1)<cr>
+xmap <silent> <plug>(CutthroatSubstituteVisual) <cmd>call cutthroat#command#substitute(visualmode(), v:true)<cr>
 
 nmap <silent> <plug>(CutthroatYankring) <cmd>call cutthroat#yankring#enable()<cr>

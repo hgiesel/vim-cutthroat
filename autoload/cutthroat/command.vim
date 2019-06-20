@@ -8,31 +8,34 @@ endfunction
 """
 function! cutthroat#command#delete(type, ...) abort
 
-  if !a:0
-    call setpos('.', getpos("'["))
+    if !a:0
+        call setpos('.', getpos("'["))
 
-    if a:type ==# 'char'
-      normal! v
-    elseif a:type ==# 'line'
-      normal! V
-    else " a:type ==# 'block'
-      execute "normal! \<c-v>"
+        if a:type ==# 'char'
+            normal! v
+        elseif a:type ==# 'line'
+            normal! V
+        else " a:type ==# 'block'
+            execute "normal! \<c-v>"
+        endif
+
+        call setpos('.', getpos("']"))
     endif
 
-    call setpos('.', getpos("']"))
-  endif
+    normal! ygvd
 
-  normal! ygvd
+    if !a:0
+        let &operatorfunc = g:opsave
+    endif
 
-  let &operatorfunc = g:opsave
 endfunction
 
 function! cutthroat#command#deleteToEOL() abort
-  normal! y$D
+    normal! y$D
 endfunction
 
 function! cutthroat#command#deleteLine() abort
-  normal! yydd
+    normal! yydd
 endfunction
 
 """Changing {{{1
@@ -40,23 +43,25 @@ endfunction
 """
 function! cutthroat#command#change(type, ...) abort
 
-  if !a:0
-    call setpos('.', getpos("'["))
+    if !a:0
+        call setpos('.', getpos("'["))
 
-    if a:type ==# 'char'
-      normal! v
-    elseif a:type ==# 'line'
-      normal! V
-    else " a:type ==# 'block'
-      execute "normal! \<c-v>"
+        if a:type ==# 'char'
+            normal! v
+        elseif a:type ==# 'line'
+            normal! V
+        else " a:type ==# 'block'
+            execute "normal! \<c-v>"
+        endif
+
+        call setpos('.', getpos("']"))
     endif
 
-    call setpos('.', getpos("']"))
-  endif
+    execute 'normal! ygvc'
 
-  execute 'normal! ygvc'
-
-  let &operatorfunc = g:opsave
+    if !a:0
+        let &operatorfunc = g:opsave
+    endif
 endfunction
 
 function! cutthroat#command#changeToEOL() abort
@@ -72,23 +77,25 @@ endfunction
 """
 function! cutthroat#command#replace(type, ...) abort
 
-  if !a:0
-    call setpos('.', getpos("'["))
+    if !a:0
+        call setpos('.', getpos("'["))
 
-    if a:type ==# 'char'
-      normal! v
-    elseif a:type ==# 'line'
-      normal! V
-    else " a:type ==# 'block'
-      execute "normal! \<c-v>"
+        if a:type ==# 'char'
+            normal! v
+        elseif a:type ==# 'line'
+            normal! V
+        else " a:type ==# 'block'
+            execute "normal! \<c-v>"
+        endif
+
+        call setpos('.', getpos("']"))
     endif
 
-    call setpos('.', getpos("']"))
-  endif
+    execute 'normal! p'
 
-  execute 'normal! p'
-
-  let &operatorfunc = g:opsave
+    if !a:0
+        let &operatorfunc = g:opsave
+    endif
 endfunction
 
 function! cutthroat#command#replaceToEOL() abort
@@ -104,24 +111,26 @@ endfunction
 """
 function! cutthroat#command#subtitute(type, ...) abort
 
-  if !a:0
-    call setpos('.', getpos("'["))
+    if !a:0
+        call setpos('.', getpos("'["))
 
-    if a:type ==# 'char'
-      normal! v
-    elseif a:type ==# 'line'
-      normal! V
-    else " a:type ==# 'block'
-      execute "normal! \<c-v>"
+        if a:type ==# 'char'
+            normal! v
+        elseif a:type ==# 'line'
+            normal! V
+        else " a:type ==# 'block'
+            execute "normal! \<c-v>"
+        endif
+
+        call setpos('.', getpos("']"))
     endif
 
-    call setpos('.', getpos("']"))
-  endif
+    execute 'normal! p'
+    let @"=@-
 
-  execute 'normal! p'
-  let @"=@-
-
-  let &operatorfunc = g:opsave
+    if !a:0
+        let &operatorfunc = g:opsave
+    endif
 endfunction
 
 function! cutthroat#command#subtituteToEOL() abort
