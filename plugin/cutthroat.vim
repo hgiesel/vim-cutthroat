@@ -1,15 +1,3 @@
-" command to delete
-command! ClearRegisters call <sid>ClearRegisters()
-function! s:ClearRegisters() abort
-  let l:regs = split('abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789/-"', '\zs')
-
-  for r in l:regs
-    call setreg(r, '')
-  endfor
-
-  let g:saved_nine_register = ''
-  let g:saved_yank_register = ''
-endfunction
 
 function! s:ExamineYank() abort
 
@@ -66,9 +54,10 @@ function! s:GetYankRegister() abort
 endfunction
 
 function! s:CreateYankRing(size) abort
+  let g:yankring_size = 10 + a:size
+  let g:yankring      = {}
 
-  let g:yankring = {}
-  for i in range(10 + a:size)
+  for i in range(g:yankring_size)
     if i <=# 9
       let g:yankring[i] = getreg(string(i))
     else
@@ -104,4 +93,8 @@ nmap <silent> <plug>(CutthroatSubstituteLine) <cmd>call cutthroat#command#substi
 nmap <silent> <plug>(CutthroatSubstituteToEOL) <cmd>call cutthroat#command#substituteToEOL()<cr>
 xmap <silent> <plug>(CutthroatSubstituteVisual) <cmd>call cutthroat#command#substitute(visualmode(), v:true)<cr>
 
-nmap <silent> <plug>(CutthroatYankring) <cmd>call cutthroat#yankring#enable()<cr>
+nnoremap <plug>(CutthroatYankRing) <cmd>call cutthroat#yankring#enable()<cr>
+nmap p <plug>(CutthroatYankRing)<cmd>normal! p<cr>
+
+command! ClearRegisters call cutthroat#helper#clear_registers()
+command! -nargs=? GetReg echo cutthroat#helper#getreg(<args>)
