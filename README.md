@@ -48,7 +48,7 @@ the yank ring will be enabled. The yank ring is traversed using `<C-n>` and `<C-
 1. `<C-p>` will go backwards in the yank ring
 
 Cutthroat doesn't do any mappings automatically. Any mappings you
-wish, you'll have to do yourself.
+want, you'll have to do yourself.
 
 | internal mappings               | suggested mappings |
 | ------------------------------- | ------------------ |
@@ -108,31 +108,30 @@ let g:cutthroat#yankring#allow_recursive_maps = v:true
 
 ## Cutthroat Cut Commands
 
-*Cut* commands under the hood just do a yank, followed by the
-"true deletion" command.  They imitate keep the previous behavior
-of the vim commmands.
+*Cut* commands are special commands that under the hood just do a yank, followed by a
+"true deletion" command.  They imitate the previous behavior of the vim commmands.
 
 Cutthroat doesn't do any mappings automatically. Any mappings you
-wish, you'll have to do yourself.
+want, you'll have to do yourself.
 
 | internal mappings                 | usage case                                                      | suggested mappings
 | --------------------------------- | --------------------------------------------------------------- | ------------------ |
-| `<plug>(CutthroatDelete)`         | yank text selected by motion to selected register and delete it | `x`                |
-| `<plug>(CutthroatDeleteLine)`     | yank current line to selected register and delete it            | `X`                |
-| `<plug>(CutthroatDeleteToEOL)`    | yank till EOL to selected register and delete it                | `xx`               |
-| `<plug>(CutthroatDeleteVisual)`   | yank visual area to selected register and delete it             | `x_v`              |
-| `<plug>(CutthroatChange)`         | yank text selected by motion to selected register and change it | -                  |
-| `<plug>(CutthroatChangeLine)`     | yank current line to selected register and change it            | -                  |
-| `<plug>(CutthroatChangeToEOL)`    | yank till EOL to selected register and change it                | -                  |
-| `<plug>(CutthroatChangeVisual)`   | yank visual area to selected register and change it             | -                  |
-| `<plug>(CutthroatReplace)`        | replaces text selected by motion with selected register         | `gr`, `s`          |
-| `<plug>(CutthroatReplaceLine)`    | replaces current line with selected register                    | `grr`, `ss`        |
-| `<plug>(CutthroatReplaceToEOL)`   | replaces till EOL with selected register                        | `gR`, `S`          |
-| `<plug>(CutthroatReplaceVisual)`  | replaces visual area with selected register                     | `gr_v`, `s_v`      |
-| `<plug>(CutthroatExchange)`       | exchanges text selected by motion with selected register        | `s`                |
-| `<plug>(CutthroatExchangeLine)`   | exchanges current line with selected register                   | `ss`               |
-| `<plug>(CutthroatExchangeToEOL)`  | exchanges till EOL with selected register                       | `S`                |
-| `<plug>(CutthroatExchangeVisual)` | exchanges visual area with selected register                    | `s_v`              |
+| `<plug>(CutthroatDelete)`         | yank text selected by motion to selected register and *delete* it | `x`                |
+| `<plug>(CutthroatDeleteLine)`     | yank current line to selected register and *delete* it            | `X`                |
+| `<plug>(CutthroatDeleteToEOL)`    | yank till EOL to selected register and *delete* it                | `xx`               |
+| `<plug>(CutthroatDeleteVisual)`   | yank visual area to selected register and *delete* it             | `x_v`              |
+| `<plug>(CutthroatChange)`         | yank text selected by motion to selected register and *change* it | -                  |
+| `<plug>(CutthroatChangeLine)`     | yank current line to selected register and *change* it            | -                  |
+| `<plug>(CutthroatChangeToEOL)`    | yank till EOL to selected register and *change* it                | -                  |
+| `<plug>(CutthroatChangeVisual)`   | yank visual area to selected register and *change* it             | -                  |
+| `<plug>(CutthroatReplace)`        | *replaces* text selected by motion with selected register         | `gr`, `s`          |
+| `<plug>(CutthroatReplaceLine)`    | *replaces* current line with selected register                    | `grr`, `ss`        |
+| `<plug>(CutthroatReplaceToEOL)`   | *replaces* till EOL with selected register                        | `gR`, `S`          |
+| `<plug>(CutthroatReplaceVisual)`  | *replaces* visual area with selected register                     | `gr_v`, `s_v`      |
+| `<plug>(CutthroatExchange)`       | *exchanges* text selected by motion with selected register        | `s`                |
+| `<plug>(CutthroatExchangeLine)`   | *exchanges* current line with selected register                   | `ss`               |
+| `<plug>(CutthroatExchangeToEOL)`  | *exchanges* till EOL with selected register                       | `S`                |
+| `<plug>(CutthroatExchangeVisual)` | *exchanges* visual area with selected register                    | `s_v`              |
 
 An example config would be:
 
