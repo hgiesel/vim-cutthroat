@@ -47,40 +47,40 @@ augroup cutthroat
 augroup END
 
 nnoremap <silent> <plug>(CutthroatDelete)
-      \ <cmd>call cutthroat#command#prepare('cutthroat#command#delete')<cr>g@
+      \ <cmd>call cutthroat#command#prepare('cutthroat#command#delete#normal')<cr>g@
 nnoremap <silent> <plug>(CutthroatDeleteLine)
-      \ <cmd>call cutthroat#command#deleteLine()<cr>
+      \ <cmd>call cutthroat#command#delete#line()<cr>
 nnoremap <silent> <plug>(CutthroatDeleteToEOL)
-      \ <cmd>call cutthroat#command#deleteToEOL()<cr>
+      \ <cmd>call cutthroat#command#delete#toEOL()<cr>
 xnoremap <silent> <plug>(CutthroatDeleteVisual)
-      \ <cmd>call cutthroat#command#delete(visualmode(), v:true)<cr>
+      \ <cmd>call cutthroat#command#delete#normal(visualmode(), v:true)<cr>
 
 nnoremap <silent> <plug>(CutthroatChange)
-      \ <cmd>call cutthroat#command#prepare('cutthroat#command#change')<cr>g@
+      \ <cmd>call cutthroat#command#prepare('cutthroat#command#change#normal')<cr>g@
 nnoremap <silent> <plug>(CutthroatChangeLine)
-      \ <cmd>call cutthroat#command#changeLine()<cr>
+      \ <cmd>call cutthroat#command#change#line()<cr>
 nnoremap <silent> <plug>(CutthroatChangeToEOL)
-      \ <cmd>call cutthroat#command#changeToEOL()<cr>
+      \ <cmd>call cutthroat#command#change#toEOL()<cr>
 xnoremap <silent> <plug>(CutthroatChangeVisual)
-      \ <cmd>call cutthroat#command#change(visualmode(), v:true)<cr>
+      \ <cmd>call cutthroat#command#change#normal(visualmode(), v:true)<cr>
 
 nnoremap <silent> <plug>(CutthroatReplace)
-      \ <cmd>call cutthroat#command#prepare('cutthroat#command#replace')<cr>g@
+      \ <cmd>call cutthroat#command#prepare('cutthroat#command#replace#normal')<cr>g@
 nnoremap <silent> <plug>(CutthroatReplaceLine)
-      \ <cmd>call cutthroat#command#replaceLine()<cr>
+      \ <cmd>call cutthroat#command#replace#line()<cr>
 nnoremap <silent> <plug>(CutthroatReplaceToEOL)
-      \ <cmd>call cutthroat#command#replaceToEOL()<cr>
+      \ <cmd>call cutthroat#command#replace#toEOL()<cr>
 xnoremap <silent> <plug>(CutthroatReplaceVisual)
-      \ <cmd>call cutthroat#command#replace(visualmode(), v:true)<cr>
+      \ <cmd>call cutthroat#command#replace#normal(visualmode(), v:true)<cr>
 
 nnoremap <silent> <plug>(CutthroatExchange)
-      \ <cmd>call cutthroat#command#prepare('cutthroat#command#substitute')<cr>g@
+      \ <cmd>call cutthroat#command#prepare('cutthroat#command#exchange#normal')<cr>g@
 nnoremap <silent> <plug>(CutthroatExchangeLine)
-      \ <cmd>call cutthroat#command#substituteLine()<cr>
+      \ <cmd>call cutthroat#command#exchange#line()<cr>
 nnoremap <silent> <plug>(CutthroatExchangeToEOL)
-      \ <cmd>call cutthroat#command#substituteToEOL()<cr>
+      \ <cmd>call cutthroat#command#exchange#toEOL()<cr>
 xnoremap <silent> <plug>(CutthroatExchangeVisual)
-      \ <cmd>call cutthroat#command#substitute(visualmode(), v:true)<cr>
+      \ <cmd>call cutthroat#command#exchange#normal(visualmode(), v:true)<cr>
 
 nnoremap <plug>(CutthroatYankRing_p)
       \ <cmd>call cutthroat#yankring#enable('p')<cr>
@@ -99,4 +99,4 @@ xnoremap <plug>(CutthroatYankRing_v_P)
 
 command! ClearRegisters call cutthroat#helper#clear_registers()
 command! ClearYankRing call cutthroat#helper#clear_yankring()
-command! -nargs=? GetReg echo cutthroat#helper#getreg(<args>)
+command! -nargs=? GetYank echo cutthroat#helper#getyank(<args>)

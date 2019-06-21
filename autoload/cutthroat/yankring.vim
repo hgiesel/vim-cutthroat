@@ -87,6 +87,10 @@ function! cutthroat#yankring#enable(mode) abort
   let s:origpos                    = getpos('.')
 
   if a:mode ==# 'v_p' || a:mode ==# 'v_P'
+    if index(['v', 'V', ''], mode())
+      normal! gv
+    endif
+
     let s:visualmode  = visualmode()
     let s:origpos_end = getpos('v')
   else " fake values, these should never be used

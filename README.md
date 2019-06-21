@@ -37,6 +37,14 @@ to `""`, `"0`, and `"z`, it will only write to `"z` and `"-`.
 This makes them stand apart from prefixing a **yank**, or **cut** command,
 which would yank to `""`, `"0`, and `"a`.
 
+### Helper commands
+
+```vim
+:ClearRegisters " Clears all builtin registers
+:ClearYankRing  " Clears all values in the Cutthroat Yank Ring
+:GetYank        " Get specific value from the yank ring, excepts a number argument
+```
+
 ## Cutthroat Yank Ring
 
 The yank ring facilitates accessing prior yanks and [cuts](cutthroat-cut-commands).

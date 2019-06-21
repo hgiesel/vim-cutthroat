@@ -22,7 +22,7 @@ function! cutthroat#helper#clear_yankring() abort
   let g:yankring = l:yankring_replacement
 endfunction
 
-function! cutthroat#helper#getreg(...) abort
+function! cutthroat#helper#getyank(...) abort
   let l:result = ''
 
   if a:0 ==# 1
