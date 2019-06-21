@@ -79,8 +79,9 @@ function! s:YankBackwards() abort
 endfunction
 
 function! cutthroat#yankring#enable(mode) abort
-
-  let s:origpos = getpos('.')
+  let l:register                   = v:register
+  let l:paste_from_within_yankring = v:false
+  let s:origpos                    = getpos('.')
 
   if a:mode ==# 'v_p' || a:mode ==# 'v_P'
     let s:visualmode  = visualmode()
@@ -91,11 +92,12 @@ function! cutthroat#yankring#enable(mode) abort
   endif
 
   if index(split('"0123456789' . (g:yankring_size > 10 ? 'abcdefghijklmnopqrstuvwxyz'[0:g:yankring_size - 11]: ''), '\zs'), v:register) > -1
-    if match(v:register, '[0-9]') ==# 0
-      let s:yank_current = str2nr(v:register)
-    elseif match(v:register, '[a-z]') ==# 0
-      let s:yank_current = 10 + index(split('abcdefghijklmnopqrstuvwxyz', '\zs'), v:register)
-    else " v:register ==3 '"'
+    let l:paste_from_within_yankring = v:true
+    if match(l:register, '[0-9]') ==# 0
+      let s:yank_current = str2nr(l:register)
+    elseif match(l:register, '[a-z]') ==# 0
+      let s:yank_current = 10 + index(split('abcdefghijklmnopqrstuvwxyz', '\zs'), l:register)
+    else " l:register ==3 '"'
       let s:yank_current = 0
     endif
 
@@ -115,8 +117,11 @@ function! cutthroat#yankring#enable(mode) abort
   normal! 
 
   let s:mode = a:mode
-  call s:InsertRegister(a:mode, v:register, s:visualmode)
-  call s:UpdatePos()
+  call s:InsertRegister(a:mode, l:register, s:visualmode)
+
+  if l:paste_from_within_yankring
+    call s:UpdatePos()
+  endif
 endfunction
 
 ""
@@ -140,16 +145,24 @@ function! s:CheckIfStillValid(force) abort
 
     execute "normal! \<c-l>"
 
-    if s:save_ctrl_n  == {}
-      nunmap <c-n>
-    else
-      execute 'n' . (s:save_ctrl_n['noremap'] ? 'noremap' : 'map') . ' <C-n> ' . s:save_ctrl_n['rhs']
+    if !empty(maparg('<c-n>', 'n'))
+      if s:save_ctrl_n ==# {}
+        nunmap <c-n>
+      else
+        execute 'n' . (s:save_ctrl_n['noremap'] ? 'noremap' : 'map') . ' <C-n> ' . s:save_ctrl_n['rhs']
+      endif
+
+      unlet s:save_ctrl_n
     endif
 
-    if s:save_ctrl_p  == {}
-      nunmap <c-p>
-    else
-      execute 'n' . (s:save_ctrl_p['noremap'] ? 'noremap' : 'map') . ' <C-p> ' . s:save_ctrl_p['rhs']
+    if !empty(maparg('<c-p>', 'n'))
+      if s:save_ctrl_p ==# {}
+        nunmap <c-p>
+      else
+        execute 'n' . (s:save_ctrl_p['noremap'] ? 'noremap' : 'map') . ' <C-p> ' . s:save_ctrl_p['rhs']
+      endif
+
+      unlet s:save_ctrl_p
     endif
 
     augroup cutthroat-yankring-checkifstillvalid

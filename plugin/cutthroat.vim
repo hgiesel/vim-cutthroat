@@ -87,40 +87,40 @@ augroup cutthroat
   autocmd VimEnter * call s:CreateYankRing(5)
 augroup END
 
-nmap <silent> <plug>(CutthroatDelete)
+nnoremap <silent> <plug>(CutthroatDelete)
       \ <cmd>call cutthroat#command#prepare('cutthroat#command#delete')<cr>g@
-nmap <silent> <plug>(CutthroatDeleteLine)
+nnoremap <silent> <plug>(CutthroatDeleteLine)
       \ <cmd>call cutthroat#command#deleteLine()<cr>
-nmap <silent> <plug>(CutthroatDeleteToEOL)
+nnoremap <silent> <plug>(CutthroatDeleteToEOL)
       \ <cmd>call cutthroat#command#deleteToEOL()<cr>
-xmap <silent> <plug>(CutthroatDeleteVisual)
+xnoremap <silent> <plug>(CutthroatDeleteVisual)
       \ <cmd>call cutthroat#command#delete(visualmode(), v:true)<cr>
 
-nmap <silent> <plug>(CutthroatChange)
+nnoremap <silent> <plug>(CutthroatChange)
       \ <cmd>call cutthroat#command#prepare('cutthroat#command#change')<cr>g@
-nmap <silent> <plug>(CutthroatChangeLine)
+nnoremap <silent> <plug>(CutthroatChangeLine)
       \ <cmd>call cutthroat#command#changeLine()<cr>
-nmap <silent> <plug>(CutthroatChangeToEOL)
+nnoremap <silent> <plug>(CutthroatChangeToEOL)
       \ <cmd>call cutthroat#command#changeToEOL()<cr>
-xmap <silent> <plug>(CutthroatChangeVisual)
+xnoremap <silent> <plug>(CutthroatChangeVisual)
       \ <cmd>call cutthroat#command#change(visualmode(), v:true)<cr>
 
-nmap <silent> <plug>(CutthroatReplace)
+nnoremap <silent> <plug>(CutthroatReplace)
       \ <cmd>call cutthroat#command#prepare('cutthroat#command#replace')<cr>g@
-nmap <silent> <plug>(CutthroatReplaceLine)
+nnoremap <silent> <plug>(CutthroatReplaceLine)
       \ <cmd>call cutthroat#command#replaceLine()<cr>
-nmap <silent> <plug>(CutthroatReplaceToEOL)
+nnoremap <silent> <plug>(CutthroatReplaceToEOL)
       \ <cmd>call cutthroat#command#replaceToEOL()<cr>
-xmap <silent> <plug>(CutthroatReplaceVisual)
+xnoremap <silent> <plug>(CutthroatReplaceVisual)
       \ <cmd>call cutthroat#command#replace(visualmode(), v:true)<cr>
 
-nmap <silent> <plug>(CutthroatSubstitute)
+nnoremap <silent> <plug>(CutthroatSubstitute)
       \ <cmd>call cutthroat#command#prepare('cutthroat#command#substitute')<cr>g@
-nmap <silent> <plug>(CutthroatSubstituteLine)
+nnoremap <silent> <plug>(CutthroatSubstituteLine)
       \ <cmd>call cutthroat#command#substituteLine()<cr>
-nmap <silent> <plug>(CutthroatSubstituteToEOL)
+nnoremap <silent> <plug>(CutthroatSubstituteToEOL)
       \ <cmd>call cutthroat#command#substituteToEOL()<cr>
-xmap <silent> <plug>(CutthroatSubstituteVisual)
+xnoremap <silent> <plug>(CutthroatSubstituteVisual)
       \ <cmd>call cutthroat#command#substitute(visualmode(), v:true)<cr>
 
 nnoremap <plug>(CutthroatYankRing_p)
@@ -137,15 +137,6 @@ xnoremap <plug>(CutthroatYankRing_v_p)
       \ <cmd>call cutthroat#yankring#enable('v_p')<cr>
 xnoremap <plug>(CutthroatYankRing_v_P)
       \ <cmd>call cutthroat#yankring#enable('v_P')<cr>
-
-nmap p <plug>(CutthroatYankRing_p)
-nmap P <plug>(CutthroatYankRing_P)
-
-nmap gp <plug>(CutthroatYankRing_gp)
-nmap gP <plug>(CutthroatYankRing_gP)
-
-xmap p <plug>(CutthroatYankRing_v_p)
-xmap P <plug>(CutthroatYankRing_v_P)
 
 command! ClearRegisters call cutthroat#helper#clear_registers()
 command! -nargs=? GetReg echo cutthroat#helper#getreg(<args>)
