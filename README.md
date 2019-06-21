@@ -3,8 +3,8 @@
 A simple plugin implementing cutlass-mode.
 
 1. [Cutthroat Cutlass mode](#cutthroat-cutlass-mode)
-1. [Cutthroat Commands](#cutthroat-cut-commands)
 1. [Cutthroat Yank-Ring](#cutthroat-yank-ring)
+1. [Cutthroat Commands](#cutthroat-cut-commands)
 
 Does not behave well with yanking to named registers until [this](https://github.com/neovim/neovim/issues/10225) is fixed.
 
@@ -21,7 +21,7 @@ The yank commands `y`, `Y`, `yy` will utilize the "history registers", `"0`, `"1
 Additionally, a new set of commands is introduced, the **"cut"** commands, which contrast with
 the "true deletion" commands. They are explained [in the next section](#cutthroat-cut-commands).
 
-#### Differences to nelstroms cutlass
+### Differences to nelstroms cutlass
 
 Note that **cutthroat.vim** does deviate from [the definition here](https://github.com/nelstrom/vim-cutlass) a bit.
 
@@ -87,7 +87,7 @@ let g:cutthroat#yankring#named_registers_count = 5
 
 The default is **0**.
 
-### Combining with another map
+### Combining with other mappings
 
 Chances are, your `p`, or `P` key are already mapped. In this case, you
 might use the following options, to point to these mappings from within cutthroat.
