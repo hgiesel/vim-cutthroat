@@ -25,7 +25,7 @@ function! s:InsertIntoYankRing(regcontents, regtype) abort
     if i == 0
       let g:yankring[i] = {'regcontents': a:regcontents, 'regtype': a:regtype}
     else
-      let g:yankring[i] = g:yankring[i-1]
+      let g:yankring[i] = g:yankring[i - 1]
     endif
 
   endfor
@@ -127,13 +127,25 @@ nnoremap <plug>(CutthroatYankRing_p)
       \ <cmd>call cutthroat#yankring#enable('p')<cr>
 nnoremap <plug>(CutthroatYankRing_P)
       \ <cmd>call cutthroat#yankring#enable('P')<cr>
-nnoremap <plug>(CutthroatYankRing_v_p)
+
+nnoremap <plug>(CutthroatYankRing_gp)
+      \ <cmd>call cutthroat#yankring#enable('gp')<cr>
+nnoremap <plug>(CutthroatYankRing_gP)
+      \ <cmd>call cutthroat#yankring#enable('gP')<cr>
+
+xnoremap <plug>(CutthroatYankRing_v_p)
       \ <cmd>call cutthroat#yankring#enable('v_p')<cr>
-nnoremap <plug>(CutthroatYankRing_v_P)
+xnoremap <plug>(CutthroatYankRing_v_P)
       \ <cmd>call cutthroat#yankring#enable('v_P')<cr>
 
 nmap p <plug>(CutthroatYankRing_p)
 nmap P <plug>(CutthroatYankRing_P)
+
+nmap gp <plug>(CutthroatYankRing_gp)
+nmap gP <plug>(CutthroatYankRing_gP)
+
+xmap p <plug>(CutthroatYankRing_v_p)
+xmap P <plug>(CutthroatYankRing_v_P)
 
 command! ClearRegisters call cutthroat#helper#clear_registers()
 command! -nargs=? GetReg echo cutthroat#helper#getreg(<args>)

@@ -20,7 +20,10 @@ function! cutthroat#helper#getreg(...) abort
     let l:result .= get(g:yankring, a:1, {'regcontents': 'null'})['regcontents']
   else
     for i in range(g:yankring_size)
-      let l:result .= (i < 10 ? '0'.string(i) : string(i)).'('.get(g:yankring, i).')'. ":\t" . get(g:yankring, i)['regcontents'] . "\n"
+      let l:result .= (i < 10 ? '0'.string(i) : string(i))
+      let l:result .= '(' . get(g:yankring, i)['regtype'] . ')'
+      let l:result .= ":\t"
+      let l:result .= get(g:yankring, i)['regcontents'] . "\n"
     endfor
   endif
 

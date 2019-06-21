@@ -83,6 +83,7 @@ xnoremap s <plug>(CutthroatReplaceVisual)
 
 
 
+
 ## Inspirations for this plugin
 
 * [nelstroms specification](https://github.com/nelstrom/vim-cutlass)

@@ -1,72 +1,94 @@
-function! cutthroat#yankring#DisableYankRing() abort
-  echo s:yank_current
+let g:cutthroat#yankring#command_p   = get(g:, 'cutthroat#yankring#command_p', 'p')
+let g:cutthroat#yankring#command_P   = get(g:, 'cutthroat#yankring#command_P', 'P')
+let g:cutthroat#yankring#command_v_p = get(g:, 'cutthroat#yankring#command_v_p', 'p')
+let g:cutthroat#yankring#command_v_P = get(g:, 'cutthroat#yankring#command_v_P', 'P')
+let g:cutthroat#yankring#command_gp  = get(g:, 'cutthroat#yankring#command_gp', 'gp')
+let g:cutthroat#yankring#command_gP  = get(g:, 'cutthroat#yankring#command_gP', 'gP')
 
-  nunmap <C-n>
-  nunmap <C-p>
-endfunction
+let g:cutthroat#yankring#allow_recursive_maps = get(g:, 'cutthroat#yankring#allow_recursive_maps', v:false)
 
+function! s:InsertRegister(mode, register, visualmode)
+  let l:base = 'normal'.(g:cutthroat#yankring#allow_recursive_maps ? '' : '!').' "' . a:register
 
-function! s:ReselectSection() abort
-  call setpos('.', s:startpos)
-  execute 'normal! ' . s:regtype
-  call setpos('.', s:endpos)
+  if a:mode ==# 'p'
+    execute l:base . g:cutthroat#yankring#command_p
+  elseif a:mode ==# 'P'
+    execute l:base . g:cutthroat#yankring#command_P
+  elseif a:mode ==# 'v_p'
+    execute 'normal! ' . a:visualmode
+    call setpos('.',  s:origpos_end)
+    normal! o
+
+    execute l:base . g:cutthroat#yankring#command_v_p
+  elseif a:mode ==# 'v_P'
+    execute 'normal! ' . a:visualmode
+    call setpos('.',  s:origpos_end)
+    normal! o
+
+    execute l:base . g:cutthroat#yankring#command_v_P
+  elseif a:mode ==# 'gp'
+    execute l:base . g:cutthroat#yankring#command_gp
+  else " if a:mode ==# 'gP'
+    execute l:base . g:cutthroat#yankring#command_gP
+  endif
 endfunction
 
 function! s:ReinsertYank() abort
-  undojoin | noautocmd execute 'normal! "_d'
-  normal! 
+  silent normal! u
   call setpos('.', s:origpos)
 
- . cutthroat#helper#getreg(s:yank_current)
-  let s:regtype  = getregtype('"')
+  if s:yank_current <= 9
+    let l:register = string(s:yank_current)
+  else " s:yank_current >= 10
+    let l:register = 'abcdefghijklmnopqrstuvwxyz'[s:yank_current - 10]
+  endif
+
+  call s:InsertRegister(s:mode, l:register, s:visualmode)
+
   let s:startpos = getpos("'[")
   let s:endpos   = getpos("']")
 endfunction
 
-function! s:RestoreInput() abort
-  call inputrestore()
-endfunction
-
 function! s:PrintCurrentYankOnCmdline() abort
-  call inputsave()
-
   if s:yank_current <= 9
     echo 'Current register is "''' . s:yank_current . '"'
   else
     let l:letters = 'abcdefghijklmnopqrstuvwxyz'
     echo 'Current register is "''' . l:letters[s:yank_current - 10] . '"'
   endif
-
-  call jobstart('sleep 3', { 'on_exit': {a, b, c -> s:RestoreInput() }}) 
 endfunction
 
 function! s:YankForwards() abort
-
   let s:yank_current += 1
   if s:yank_current >= g:yankring_size
     let s:yank_current = 0
   endif
 
   call s:PrintCurrentYankOnCmdline()
-  call s:ReselectSection()
   call s:ReinsertYank()
-
 endfunction
 
 function! s:YankBackwards() abort
-
   let s:yank_current -= 1
   if s:yank_current < 0
     let s:yank_current = g:yankring_size - 1
   endif
 
   call s:PrintCurrentYankOnCmdline()
-  call s:ReselectSection()
   call s:ReinsertYank()
-
 endfunction
 
 function! cutthroat#yankring#enable(mode) abort
+
+  let s:origpos = getpos('.')
+
+  if a:mode ==# 'v_p' || a:mode ==# 'v_P'
+    let s:visualmode  = visualmode()
+    let s:origpos_end = getpos('v')
+  else " fake values, these should never be used
+    let s:visualmode  = 'v'
+    let s:origpos_end = s:origpos
+  endif
 
   if index(split('"0123456789' . (g:yankring_size > 10 ? 'abcdefghijklmnopqrstuvwxyz'[0:g:yankring_size - 11]: ''), '\zs'), v:register) > -1
     if match(v:register, '[0-9]') ==# 0
@@ -76,8 +98,6 @@ function! cutthroat#yankring#enable(mode) abort
     else " v:register ==3 '"'
       let s:yank_current = 0
     endif
-
-    let s:origpos = getpos('.')
 
     if !exists('s:save_ctrl_n')
       let s:save_ctrl_n = maparg('<c-n>', 'n', v:false, v:true)
@@ -90,45 +110,35 @@ function! cutthroat#yankring#enable(mode) abort
     augroup cutthroat-yankring-checkifstillvalid
       autocmd!
     augroup END
-
-    augroup cutthroat-yankring-getpos
-      autocmd!
-      autocmd TextChanged * call <sid>UpdatePos()
-    augroup END
   endif
 
-  if a:mode ==# 'p'
-    execute 'normal! "' . v:register . 'p'
-  elseif a:mode ==# 'P'
-    execute 'normal! "' . v:register . 'P'
-  elseif a:mode ==# 'v_p'
-    execute 'normal! "' . v:register . 'p'
-  else " a:mode ==# 'v_P'
-    execute 'normal! "' . v:register . 'P'
-  endif
+  normal! 
+
+  let s:mode = a:mode
+  call s:InsertRegister(a:mode, v:register, s:visualmode)
+  call s:UpdatePos()
 endfunction
 
+""
+" This is called right after the "p" command is executed
+""
 function! s:UpdatePos() abort
   let s:startpos = getpos("'[")
   let s:endpos   = getpos("']")
   let s:regtype  = getregtype('"')
 
-  augroup cutthroat-yankring-getpos
-    autocmd!
-  augroup END
-
   augroup cutthroat-yankring-checkifstillvalid
     autocmd!
-    autocmd TextChanged  * call <sid>CheckIfStillValid()
-    autocmd TextChangedI * call <sid>CheckIfStillValid()
-    autocmd TextChangedP * call <sid>CheckIfStillValid()
+    autocmd TextChanged  * call <sid>CheckIfStillValid(v:false)
+    autocmd InsertEnter  * call <sid>CheckIfStillValid(v:true)
+    autocmd InsertLeave  * call <sid>CheckIfStillValid(v:true)
   augroup END
 endfunction
 
+function! s:CheckIfStillValid(force) abort
+  if a:force || s:startpos !=# getpos("'[") || s:endpos !=# getpos("']") || s:regtype !=# getregtype('"')
 
-function! s:CheckIfStillValid() abort
-
-  if s:startpos !=# getpos("'[") || s:endpos !=# getpos("']") || s:regtype !=# getregtype('"')
+    execute "normal! \<c-l>"
 
     if s:save_ctrl_n  == {}
       nunmap <c-n>
@@ -146,5 +156,4 @@ function! s:CheckIfStillValid() abort
       autocmd!
     augroup END
   endif
-
 endfunction
