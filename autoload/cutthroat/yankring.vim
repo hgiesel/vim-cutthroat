@@ -13,10 +13,11 @@ function! s:ReselectSection() abort
 endfunction
 
 function! s:ReinsertYank() abort
-  undojoin | noautocmd execute 'normal! "_c' . cutthroat#helper#getreg(s:yank_current)
+  undojoin | noautocmd execute 'normal! "_d'
   normal! 
-  call setpos('.', s:startpos)
+  call setpos('.', s:origpos)
 
+ . cutthroat#helper#getreg(s:yank_current)
   let s:regtype  = getregtype('"')
   let s:startpos = getpos("'[")
   let s:endpos   = getpos("']")
@@ -26,7 +27,7 @@ function! s:RestoreInput() abort
   call inputrestore()
 endfunction
 
-function! s:PrintCurrentYank() abort
+function! s:PrintCurrentYankOnCmdline() abort
   call inputsave()
 
   if s:yank_current <= 9
@@ -46,7 +47,7 @@ function! s:YankForwards() abort
     let s:yank_current = 0
   endif
 
-  call s:PrintCurrentYank()
+  call s:PrintCurrentYankOnCmdline()
   call s:ReselectSection()
   call s:ReinsertYank()
 
@@ -59,31 +60,52 @@ function! s:YankBackwards() abort
     let s:yank_current = g:yankring_size - 1
   endif
 
-  call s:PrintCurrentYank()
+  call s:PrintCurrentYankOnCmdline()
   call s:ReselectSection()
   call s:ReinsertYank()
 
 endfunction
 
-function! cutthroat#yankring#enable() abort
-  let s:yank_current = 0
+function! cutthroat#yankring#enable(mode) abort
 
-  if !exists('s:save_ctrl_n')
-    let s:save_ctrl_n = maparg('<c-n>', 'n', v:false, v:true)
-    let s:save_ctrl_p = maparg('<c-p>', 'n', v:false, v:true)
+  if index(split('"0123456789' . (g:yankring_size > 10 ? 'abcdefghijklmnopqrstuvwxyz'[0:g:yankring_size - 11]: ''), '\zs'), v:register) > -1
+    if match(v:register, '[0-9]') ==# 0
+      let s:yank_current = str2nr(v:register)
+    elseif match(v:register, '[a-z]') ==# 0
+      let s:yank_current = 10 + index(split('abcdefghijklmnopqrstuvwxyz', '\zs'), v:register)
+    else " v:register ==3 '"'
+      let s:yank_current = 0
+    endif
+
+    let s:origpos = getpos('.')
+
+    if !exists('s:save_ctrl_n')
+      let s:save_ctrl_n = maparg('<c-n>', 'n', v:false, v:true)
+      let s:save_ctrl_p = maparg('<c-p>', 'n', v:false, v:true)
+    endif
+
+    nnoremap <c-n> <cmd>call <sid>YankForwards()<cr>
+    nnoremap <c-p> <cmd>call <sid>YankBackwards()<cr>
+
+    augroup cutthroat-yankring-checkifstillvalid
+      autocmd!
+    augroup END
+
+    augroup cutthroat-yankring-getpos
+      autocmd!
+      autocmd TextChanged * call <sid>UpdatePos()
+    augroup END
   endif
 
-  nnoremap <c-n> <cmd>call <sid>YankForwards()<cr>
-  nnoremap <c-p> <cmd>call <sid>YankBackwards()<cr>
-
-  augroup cutthroat-yankring-checkifstillvalid
-    autocmd!
-  augroup END
-
-  augroup cutthroat-yankring-getpos
-    autocmd!
-    autocmd TextChanged * call <sid>UpdatePos()
-  augroup END
+  if a:mode ==# 'p'
+    execute 'normal! "' . v:register . 'p'
+  elseif a:mode ==# 'P'
+    execute 'normal! "' . v:register . 'P'
+  elseif a:mode ==# 'v_p'
+    execute 'normal! "' . v:register . 'p'
+  else " a:mode ==# 'v_P'
+    execute 'normal! "' . v:register . 'P'
+  endif
 endfunction
 
 function! s:UpdatePos() abort

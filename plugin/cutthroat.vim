@@ -4,13 +4,13 @@ function! s:ExamineYank() abort
   if v:event['operator'] ==# 'c' ||
         \ v:event['operator'] ==# 'd'
 
-    call setreg('-', v:event['regcontents'])
-    call s:RollbackYankRing(1)
+    call setreg('-', v:event['regcontents'], v:event['regtype'])
+    call s:SyncRegistersToYankRing()
 
   elseif v:event['operator'] ==# 'y'
 
-    call s:InsertIntoYankRing(getreg('"'))
-    call s:SyncYankRing()
+    call s:InsertIntoYankRing(join(v:event['regcontents'], "\n"), v:event['regtype'])
+    call s:SyncRegistersToYankRing()
 
   else
     echom 'I should not happen'
@@ -19,11 +19,11 @@ function! s:ExamineYank() abort
   endif
 endfunction
 
-function! s:InsertIntoYankRing(value) abort
+function! s:InsertIntoYankRing(regcontents, regtype) abort
   for i in reverse(range(g:yankring_size))
 
     if i == 0
-      let g:yankring[i] = a:value
+      let g:yankring[i] = {'regcontents': a:regcontents, 'regtype': a:regtype}
     else
       let g:yankring[i] = g:yankring[i-1]
     endif
@@ -38,9 +38,8 @@ function! s:RollbackYankRing(howmuch) abort
   endfor
 
   for i in range(g:yankring_size - a:howmuch, g:yankring_size - 1)
-    let g:yankring[i] = ''
+    let g:yankring[i]['regcontents'] = ''
   endfor
-
 endfunction
 
 function! s:GetYankRegister() abort
@@ -60,30 +59,32 @@ function! s:CreateYankRing(size) abort
 
   for i in range(g:yankring_size)
     if i <=# 9
-      let g:yankring[i] = getreg(string(i))
+      let g:yankring[i] = {'regcontents': getreg(string(i)), 'regtype': getregtype(string(i))}
     else
-      let g:yankring[i] = getreg(l:letters[i - 10])
+      let g:yankring[i] = {'regcontents': getreg(l:letters[i - 10]), 'regtype': getregtype(l:letters[i - 10])}
     endif
   endfor
 endfunction
 
-function! s:SyncYankRing() abort
+function! s:SyncRegistersToYankRing() abort
+  call setreg('"', g:yankring[0]['regcontents'], g:yankring[0]['regtype'])
+
   for i in range(10)
-    call setreg(i, g:yankring[i])
+    call setreg(i, g:yankring[i]['regcontents'], g:yankring[i]['regtype'])
   endfor
 
   let l:letters = 'abcdefghijklmnopqrstuvwxyz'
 
   for i in range(g:yankring_size - 10)
-    call setreg(l:letters[i], g:yankring[i + 10])
+    call setreg(l:letters[i], g:yankring[i + 10]['regcontents'], g:yankring[i + 10]['regtype'])
   endfor
 endfunction
 
 augroup cutthroat
   autocmd!
   autocmd TextYankPost * call s:ExamineYank()
-  autocmd CursorMoved * call s:SyncYankRing()
-  autocmd BufEnter * call s:CreateYankRing(5)
+  autocmd CursorMoved * call s:SyncRegistersToYankRing()
+  autocmd VimEnter * call s:CreateYankRing(5)
 augroup END
 
 nmap <silent> <plug>(CutthroatDelete)
@@ -122,9 +123,17 @@ nmap <silent> <plug>(CutthroatSubstituteToEOL)
 xmap <silent> <plug>(CutthroatSubstituteVisual)
       \ <cmd>call cutthroat#command#substitute(visualmode(), v:true)<cr>
 
-nnoremap <plug>(CutthroatYankRing)
-      \ <cmd>call cutthroat#yankring#enable()<cr>
-nmap p <plug>(CutthroatYankRing)<cmd>normal! p<cr>
+nnoremap <plug>(CutthroatYankRing_p)
+      \ <cmd>call cutthroat#yankring#enable('p')<cr>
+nnoremap <plug>(CutthroatYankRing_P)
+      \ <cmd>call cutthroat#yankring#enable('P')<cr>
+nnoremap <plug>(CutthroatYankRing_v_p)
+      \ <cmd>call cutthroat#yankring#enable('v_p')<cr>
+nnoremap <plug>(CutthroatYankRing_v_P)
+      \ <cmd>call cutthroat#yankring#enable('v_P')<cr>
+
+nmap p <plug>(CutthroatYankRing_p)
+nmap P <plug>(CutthroatYankRing_P)
 
 command! ClearRegisters call cutthroat#helper#clear_registers()
 command! -nargs=? GetReg echo cutthroat#helper#getreg(<args>)

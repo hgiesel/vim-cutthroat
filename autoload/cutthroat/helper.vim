@@ -11,15 +11,18 @@ function! cutthroat#helper#clear_registers() abort
 endfunction
 
 function! cutthroat#helper#getreg(...) abort
-  if a:0 == 1
-    return get(g:yankring, a:1, '')
+  let l:result = ''
+
+  if a:0 ==# 1
+    let l:result .= (a:1 < 10 ? '0'.string(a:1) : string(a:1))
+    let l:result .= '(' . get(g:yankring, a:1, {'regtype': 'null'})['regtype'] . ')'
+    let l:result .= ":\t"
+    let l:result .= get(g:yankring, a:1, {'regcontents': 'null'})['regcontents']
   else
-
-    let l:result = []
     for i in range(g:yankring_size)
-      call add(l:result, g:yankring[i])
+      let l:result .= (i < 10 ? '0'.string(i) : string(i)).'('.get(g:yankring, i).')'. ":\t" . get(g:yankring, i)['regcontents'] . "\n"
     endfor
-
-    return l:result
   endif
+
+  return l:result
 endfunction
