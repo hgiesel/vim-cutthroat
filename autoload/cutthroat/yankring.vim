@@ -13,14 +13,13 @@ function! s:ReselectSection() abort
 endfunction
 
 function! s:ReinsertYank() abort
-  noautocmd execute 'normal! "_c' . cutthroat#helper#getreg(s:yank_current)
+  undojoin | noautocmd execute 'normal! "_c' . cutthroat#helper#getreg(s:yank_current)
   normal! 
   call setpos('.', s:startpos)
 
   let s:regtype  = getregtype('"')
   let s:startpos = getpos("'[")
   let s:endpos   = getpos("']")
-
 endfunction
 
 

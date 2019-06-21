@@ -5,47 +5,41 @@ function! s:ExamineYank() abort
         \ v:event['operator'] ==# 'd'
 
     call setreg('-', v:event['regcontents'])
-    call setreg('"', getreg('0'))
-
-    call setreg('1', getreg('2'))
-    call setreg('2', getreg('3'))
-    call setreg('3', getreg('4'))
-    call setreg('4', getreg('5'))
-    call setreg('5', getreg('6'))
-    call setreg('6', getreg('7'))
-    call setreg('7', getreg('8'))
-    call setreg('8', getreg('9'))
-    call setreg('9', get(g:, 'saved_nine_register', ''))
-
-    let g:saved_nine_register = getreg('9')
+    call s:RollbackYankRing(1)
 
   elseif v:event['operator'] ==# 'y'
 
-    let g:saved_nine_register = getreg('9')
-    call setreg('9', getreg('8'))
-    call setreg('8', getreg('7'))
-    call setreg('7', getreg('6'))
-    call setreg('6', getreg('5'))
-    call setreg('5', getreg('4'))
-    call setreg('4', getreg('3'))
-    call setreg('3', getreg('2'))
-    call setreg('2', getreg('1'))
-    call setreg('1', get(g:, 'saved_yank_register'))
+    call s:InsertIntoYankRing(getreg('"'))
+    call s:SyncYankRing()
 
-    let g:saved_yank_register = getreg('"')
   else
-    echom 'I should not happen'
-    echom 'I should not happen'
     echom 'I should not happen'
     echom 'I should not happen'
     echom v:event
   endif
+endfunction
 
-  if v:event['regname'] !=# ''
-    " augroup cutthroat_oneshot
-    "   autocmd CursorHold
-    " augroup END
-  endif
+function! s:InsertIntoYankRing(value) abort
+  for i in reverse(range(g:yankring_size))
+
+    if i == 0
+      let g:yankring[i] = a:value
+    else
+      let g:yankring[i] = g:yankring[i-1]
+    endif
+
+  endfor
+endfunction
+
+function! s:RollbackYankRing(howmuch) abort
+
+  for i in range(a:howmuch, g:yankring_size - 1)
+    let g:yankring[i - a:howmuch] = g:yankring[i]
+  endfor
+
+  for i in range(g:yankring_size - a:howmuch, g:yankring_size - 1)
+    let g:yankring[i] = ''
+  endfor
 
 endfunction
 
@@ -73,11 +67,23 @@ function! s:CreateYankRing(size) abort
   endfor
 endfunction
 
+function! s:SyncYankRing() abort
+  for i in range(10)
+    call setreg(i, g:yankring[i])
+  endfor
+
+  let l:letters = 'abcdefghijklmnopqrstuvwxyz'
+
+  for i in range(g:yankring_size - 10)
+    call setreg(l:letters[i], g:yankring[i + 10])
+  endfor
+endfunction
+
 augroup cutthroat
   autocmd!
   autocmd TextYankPost * call s:ExamineYank()
-  autocmd BufEnter * call s:GetYankRegister()
-  autocmd CursorMoved * call s:CreateYankRing(5)
+  autocmd CursorMoved * call s:SyncYankRing()
+  autocmd BufEnter * call s:CreateYankRing(5)
 augroup END
 
 nmap <silent> <plug>(CutthroatDelete)
