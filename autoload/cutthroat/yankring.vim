@@ -3,8 +3,6 @@ function! cutthroat#yankring#DisableYankRing() abort
 
   nunmap <C-n>
   nunmap <C-p>
-
-  " augroup! cutthroat-yankring
 endfunction
 
 
@@ -15,7 +13,7 @@ function! s:ReselectSection() abort
 endfunction
 
 function! s:ReinsertYank() abort
-  noautocmd execute 'normal! c' . cutthroat#helper#getreg(s:yank_current)
+  noautocmd execute 'normal! "_c' . cutthroat#helper#getreg(s:yank_current)
   normal! 
   call setpos('.', s:startpos)
 
