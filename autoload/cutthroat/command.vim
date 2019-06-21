@@ -1,5 +1,6 @@
 function! cutthroat#command#prepare(command) abort
   let g:opsave = &operatorfunc
+  let s:register = v:register
   let &operatorfunc = a:command
 endfunction
 
@@ -7,6 +8,7 @@ endfunction
 "
 """
 function! cutthroat#command#delete(type, ...) abort
+  let l:register = get(s:, 'register', v:register)
 
   if !a:0
     call setpos('.', getpos("'["))
@@ -22,26 +24,31 @@ function! cutthroat#command#delete(type, ...) abort
     call setpos('.', getpos("']"))
   endif
 
-  normal! ygvd
+  normal! ygv"_d
 
   if !a:0
     let &operatorfunc = g:opsave
   endif
 
+  if exists('s:register')
+    unlet s:register
+  endif
 endfunction
 
 function! cutthroat#command#deleteToEOL() abort
-  normal! y$D
+  execute 'normal! "'.v:register.'y$"_D'
 endfunction
 
 function! cutthroat#command#deleteLine() abort
-  normal! yydd
+  execute 'normal! "'.v:register.'yy"_dd'
 endfunction
 
 """Changing {{{1
 "
 """
 function! cutthroat#command#change(type, ...) abort
+  let l:register = get(s:, 'register', v:register)
+  let [l:savedelreg, l:savedelregtype] = [getreg('-'), getregtype('-')]
 
   if !a:0
     call setpos('.', getpos("'["))
@@ -57,25 +64,55 @@ function! cutthroat#command#change(type, ...) abort
     call setpos('.', getpos("']"))
   endif
 
-  execute 'normal! ygvc'
+  execute 'normal! "'.l:register.'ygv"_c'
+  if 1 + col('.') ==# col('$')
+    startinsert!
+  else
+    startinsert
+  end
+
+  call setreg('-', l:savedelreg, l:savedelregtype)
 
   if !a:0
     let &operatorfunc = g:opsave
   endif
+
+  if exists('s:register')
+    unlet s:register
+  endif
 endfunction
 
 function! cutthroat#command#changeToEOL() abort
-  normal! y$C
+  let [l:savedelreg, l:savedelregtype] = [getreg('-'), getregtype('-')]
+  execute 'normal! v$"'. v:register .'ygv"_c'
+
+  if 1 + col('.') ==# col('$')
+    startinsert!
+  else
+    startinsert
+  end
+
+  call setreg('-', l:savedelreg, l:savedelregtype)
 endfunction
 
 function! cutthroat#command#changeLine() abort
-  normal! yycc
+  let [l:savedelreg, l:savedelregtype] = [getreg('-'), getregtype('-')]
+  execute 'normal! V"'. v:register .'ygv"_c'
+
+  if 1 + col('.') ==# col('$')
+    startinsert!
+  else
+    startinsert
+  end
+
+  call setreg('-', l:savedelreg, l:savedelregtype)
 endfunction
 
 """Changing {{{1
 "
 """
 function! cutthroat#command#replace(type, ...) abort
+  let l:register = get(s:, 'register', v:register)
 
   if !a:0
     call setpos('.', getpos("'["))
@@ -91,25 +128,31 @@ function! cutthroat#command#replace(type, ...) abort
     call setpos('.', getpos("']"))
   endif
 
-  execute 'normal! p'
+  execute 'normal! "' . l:register . 'p'
 
   if !a:0
     let &operatorfunc = g:opsave
   endif
+
+  if exists('s:register')
+    unlet s:register
+  endif
 endfunction
 
 function! cutthroat#command#replaceToEOL() abort
-  normal! v$p
+  execute 'normal! v$"' . v:register . 'p'
 endfunction
 
 function! cutthroat#command#replaceLine() abort
-  normal! Vp
+  execute 'normal! V"' . v:register . 'p'
 endfunction
 
 """Substituting {{{1
 "
 """
-function! cutthroat#command#subtitute(type, ...) abort
+function! cutthroat#command#substitute(type, ...) abort
+  let l:register = get(s:, 'register', v:register)
+  let l:savedelreg = @-
 
   if !a:0
     call setpos('.', getpos("'["))
@@ -125,20 +168,30 @@ function! cutthroat#command#subtitute(type, ...) abort
     call setpos('.', getpos("']"))
   endif
 
-  execute 'normal! p'
-  let @"=@-
+  execute 'normal! "' . l:register . 'p'
+
+  call cutthroat#helper#InsertIntoYankRing(getreg('-'), getregtype('-'))
+  let @- = l:savedelreg
 
   if !a:0
     let &operatorfunc = g:opsave
   endif
+
+  if exists('s:register')
+    unlet s:register
+  endif
 endfunction
 
-function! cutthroat#command#subtituteToEOL() abort
-  normal! v$p
-  let @"=@-
+function! cutthroat#command#substituteToEOL() abort
+  let l:savedelreg = @-
+  execute 'normal! v$"'.v:register.'p'
+  " call cutthroat#helper#InsertIntoYankRing(getreg('-'), getregtype('-'))
+  " let @- = l:savedelreg
 endfunction
 
-function! cutthroat#command#subtituteLine() abort
-  normal! Vp
-  let @"=@-
+function! cutthroat#command#substituteLine() abort
+  let l:savedelreg = @-
+  execute 'normal! V"'.v:register.'p'
+  call cutthroat#helper#InsertIntoYankRing(getreg('-'), getregtype('-'))
+  let @- = l:savedelreg
 endfunction

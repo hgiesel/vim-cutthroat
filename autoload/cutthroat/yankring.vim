@@ -1,3 +1,6 @@
+
+let g:cutthroat#yankring#named_registers_count  = get(g:, 'cutthroat#yankring#numbered_registers_count', 0)
+
 let g:cutthroat#yankring#command_p   = get(g:, 'cutthroat#yankring#command_p', 'p')
 let g:cutthroat#yankring#command_P   = get(g:, 'cutthroat#yankring#command_P', 'P')
 let g:cutthroat#yankring#command_v_p = get(g:, 'cutthroat#yankring#command_v_p', 'p')
@@ -15,13 +18,13 @@ function! s:InsertRegister(mode, register, visualmode)
   elseif a:mode ==# 'P'
     execute l:base . g:cutthroat#yankring#command_P
   elseif a:mode ==# 'v_p'
-    execute 'normal! ' . a:visualmode
+    execute 'normal! ' . (!empty(a:visualmode) ? a:visualmode : 'v')
     call setpos('.',  s:origpos_end)
     normal! o
 
     execute l:base . g:cutthroat#yankring#command_v_p
   elseif a:mode ==# 'v_P'
-    execute 'normal! ' . a:visualmode
+    execute 'normal! ' . (!empty(a:visualmode) ? a:visualmode : 'v')
     call setpos('.',  s:origpos_end)
     normal! o
 

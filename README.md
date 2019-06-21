@@ -13,43 +13,51 @@ Does not behave well with yanking to named registers until [this](https://github
 Read [this](https://github.com/nelstrom/vim-cutlass) for an introduction
 into cutlass-mode.
 
-The previous vim commands, namely `d`, `D`, `dd`, `c`, `C`, `cc`, `x`, `X`, `s`, `S`
-will all become "true deletion" commands, writing exclusively to the "deletion register"
-`"-`.
+This plugin changes the vim commands `d`, `D`, `dd`, `c`, `C`, `cc`, `x`, `X`, `s`, `S`
+to **"true deletion"** commands, writing exclusively to the "deletion register" `"-`.
 
 The yank commands `y`, `Y`, `yy` will utilize the "history registers", `"0`, `"1`, `"2`, etc.
 
-Additionally, a new set of commands is introduced, the "cut" commands, which contrast with
+Additionally, a new set of commands is introduced, the **"cut"** commands, which contrast with
 the "true deletion" commands. They are explained [in the next section](#cutthroat-cut-commands).
 
 #### Differences to nelstroms cutlass
 
-Note that **cutthroat.vim** does deviate from [this description](https://github.com/nelstrom/vim-cutlass) a bit.
+Note that **cutthroat.vim** does deviate from [the definition here](https://github.com/nelstrom/vim-cutlass) a bit.
 
 For once, `"0` is included in the history registers. Making the history
-registers `"0`, `"1`, `"2`, etc. till `9`. Yanking will write to `""` and `"0`,
-shifting the previous content of `"0` to `"1`, `"1` to `"2`,
-and so on, till you reach `"9"`.
+registers `"0`, `"1`, `"2`, etc. till `9` (and possible even further).
+Yanking and cutting will write to `""` and `"0`, shifting the previous content of
+`"0` to `"1`, `"1` to `"2`, and so on, till you reach `"9"` (and possible even further).
 
-Another change is how prefixing a deletion command with a register works,
-like say `"add`. Instead of working exactly like a *cut* command, writing
-to `""`, `"0`, and `"a`, it will only write to `"a` and `"-`.
-This makes them stand apart from prefixing a *cut* command,
+Another change that deviates from [nelstrom's definition](https://github.com/nelstrom/vim-cutlass#redefining-vims-registers)
+is how prefixing a deletion command with a register works,
+like say `"zdd`. Instead of working exactly like a **cut** command, writing
+to `""`, `"0`, and `"z`, it will only write to `"z` and `"-`.
+This makes them stand apart from prefixing a **yank**, or **cut** command,
 which would yank to `""`, `"0`, and `"a`.
 
 ## Cutthroat Yank Ring
 
+The yank ring facilitates accessing prior yanks and [cuts](cutthroat-cut-commands).
+
+Whenever you paste from within the yank ring using the keys, `p`, `P`, `gp`, `gP`, `v_p`, `v_P` (pasting in visual mode),
+the yank ring will be enabled. The yank ring is traversed using `<C-n>` and `<C-p>`.
+
+1. `<C-n>` will go forwards in the yank ring
+1. `<C-p>` will go backwards in the yank ring
+
 Cutthroat doesn't do any mappings automatically. Any mappings you
 wish, you'll have to do yourself.
 
-| internal mappings              | suggested mappings |
-| ------------------------------ | ------------------ |
-| `<plug>(CutthroatYankRing_p)   | `p`                |
-| `<plug>(CutthroatYankRing_P)   | `P`                |
-| `<plug>(CutthroatYankRing_gp)  | `gp`               |
-| `<plug>(CutthroatYankRing_gP)  | `gP`               |
-| `<plug>(CutthroatYankRing_v_p) | `v_p`              |
-| `<plug>(CutthroatYankRing_v_P) | `v_P`              |
+| internal mappings               | suggested mappings |
+| ------------------------------- | ------------------ |
+| `<plug>(CutthroatYankRing_p)`   | `p`                |
+| `<plug>(CutthroatYankRing_P)`   | `P`                |
+| `<plug>(CutthroatYankRing_gp)`  | `gp`               |
+| `<plug>(CutthroatYankRing_gP)`  | `gP`               |
+| `<plug>(CutthroatYankRing_v_p)` | `v_p`              |
+| `<plug>(CutthroatYankRing_v_P)` | `v_P`              |
 
 An example config would be:
 
@@ -64,6 +72,40 @@ xmap p <plug>(CutthroatYankRing_v_p)
 xmap P <plug>(CutthroatYankRing_v_P)
 ```
 
+### Enlarging the Yank Ring
+
+The default ring is of size 10: the registers `"0` till `"9`. However the yank ring
+can be configured to reach into the named registers as well, i.e. after `"9`, `"a`
+would follow, then `"b`, etc. until `"z`.
+
+For example:
+
+```vim
+let g:cutthroat#yankring#named_registers_count = 5
+" this would add the registers "a, "b, "c, "d, and "e to the yankring
+```
+
+The default is **0**.
+
+### Combining with another map
+
+Chances are, your `p`, or `P` key are already mapped. In this case, you
+might use the following options, to point to these mappings from within cutthroat.
+
+```vim
+let g:cutthroat#yankring#command_p   = '<plug>(MyAwesomePastePlug)'
+let g:cutthroat#yankring#command_P   = '<plug>(MyAwesomePASTEPlug)'
+let g:cutthroat#yankring#command_v_p = '<plug>(MyAwesomevPastePlug)'
+let g:cutthroat#yankring#command_v_P = '<plug>(MyAwesomevPASTEPlug)'
+let g:cutthroat#yankring#command_gp  = '<plug>(MyAwesomegPastePlug)'
+let g:cutthroat#yankring#command_gP  = '<plug>(MyAwesomegPASTEPlug)'
+
+let g:cutthroat#yankring#allow_recursive_maps = v:true
+" this defaults to v:false, it is necessary e.g. if you want to map to a <plug>:
+"" A recursive mapping: nmap p <plug>(Foo)
+"" A nonrecursive mapping: nmap p gp
+```
+
 ## Cutthroat Cut Commands
 
 *Cut* commands under the hood just do a yank, followed by the
@@ -73,24 +115,24 @@ of the vim commmands.
 Cutthroat doesn't do any mappings automatically. Any mappings you
 wish, you'll have to do yourself.
 
-| internal mappings                   | usage case                                         | suggested mappings
-| ----------------------------------- | -------------------------------------------------- | ------------------ |
-| `<plug>(CutthroatDelete)`           | equivalent to executing `v<motion>ygvd`            | `x`                |
-| `<plug>(CutthroatDeleteLine)`       | equivalent to executing `Vygvd`                    | `X`                |
-| `<plug>(CutthroatDeleteToEOL)`      | equivalent to executing `v$ygvd`                   | `xx`               |
-| `<plug>(CutthroatDeleteVisual)`     | equivalent to executing `ygvd`                     | `x_v`              |
-| `<plug>(CutthroatChange)`           | equivalent to executing `v<motion>ygvc`            | -                  |
-| `<plug>(CutthroatChangeLine)`       | equivalent to executing `Vygvc`                    | -                  |
-| `<plug>(CutthroatChangeToEOL)`      | equivalent to executing `v$ygvc`                   | -                  |
-| `<plug>(CutthroatChangeVisual)`     | equivalent to executing `ygvc`                     | -                  |
-| `<plug>(CutthroatReplace)`          | equivalent to executing `v<motion>p`               | `gr`, `s`          |
-| `<plug>(CutthroatReplaceLine)`      | equivalent to executing `Vp`                       | `grr`, `ss`        |
-| `<plug>(CutthroatReplaceToEOL)`     | equivalent to executing `v$p`                      | `gR`, `S`          |
-| `<plug>(CutthroatReplaceVisual)`    | equivalent to executing `p`                        | `gr_v`, `s_v`      |
-| `<plug>(CutthroatSubstitute)`       | equivalent to executing `v<motion>p:set @"=@-<cr>` | `s`                |
-| `<plug>(CutthroatSubstituteLine)`   | equivalent to executing `Vp:set @"=@-<cr>`         | `ss`               |
-| `<plug>(CutthroatSubstituteToEOL)`  | equivalent to executing `v$p:set @"=@-<cr>`        | `S`                |
-| `<plug>(CutthroatSubstituteVisual)` | equivalent to executing `p:set @"=@-<cr>`          | `s_v`              |
+| internal mappings                 | usage case                                                      | suggested mappings
+| --------------------------------- | --------------------------------------------------------------- | ------------------ |
+| `<plug>(CutthroatDelete)`         | yank text selected by motion to selected register and delete it | `x`                |
+| `<plug>(CutthroatDeleteLine)`     | yank current line to selected register and delete it            | `X`                |
+| `<plug>(CutthroatDeleteToEOL)`    | yank till EOL to selected register and delete it                | `xx`               |
+| `<plug>(CutthroatDeleteVisual)`   | yank visual area to selected register and delete it             | `x_v`              |
+| `<plug>(CutthroatChange)`         | yank text selected by motion to selected register and change it | -                  |
+| `<plug>(CutthroatChangeLine)`     | yank current line to selected register and change it            | -                  |
+| `<plug>(CutthroatChangeToEOL)`    | yank till EOL to selected register and change it                | -                  |
+| `<plug>(CutthroatChangeVisual)`   | yank visual area to selected register and change it             | -                  |
+| `<plug>(CutthroatReplace)`        | replaces text selected by motion with selected register         | `gr`, `s`          |
+| `<plug>(CutthroatReplaceLine)`    | replaces current line with selected register                    | `grr`, `ss`        |
+| `<plug>(CutthroatReplaceToEOL)`   | replaces till EOL with selected register                        | `gR`, `S`          |
+| `<plug>(CutthroatReplaceVisual)`  | replaces visual area with selected register                     | `gr_v`, `s_v`      |
+| `<plug>(CutthroatExchange)`       | exchanges text selected by motion with selected register        | `s`                |
+| `<plug>(CutthroatExchangeLine)`   | exchanges current line with selected register                   | `ss`               |
+| `<plug>(CutthroatExchangeToEOL)`  | exchanges till EOL with selected register                       | `S`                |
+| `<plug>(CutthroatExchangeVisual)` | exchanges visual area with selected register                    | `s_v`              |
 
 An example config would be:
 
