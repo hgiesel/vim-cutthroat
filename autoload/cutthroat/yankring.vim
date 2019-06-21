@@ -14,6 +14,18 @@ function! s:ReselectSection() abort
   call setpos('.', s:endpos)
 endfunction
 
+function! s:ReinsertYank() abort
+  noautocmd execute 'normal! c' . cutthroat#helper#getreg(s:yank_current)
+  normal! 
+  call setpos('.', s:startpos)
+
+  let s:regtype  = getregtype('"')
+  let s:startpos = getpos("'[")
+  let s:endpos   = getpos("']")
+
+endfunction
+
+
 function! s:YankForwards() abort
 
   let s:yank_current += 1
@@ -22,12 +34,7 @@ function! s:YankForwards() abort
   endif
 
   call s:ReselectSection()
-
-  execute 'normal! c' . cutthroat#helper#getreg(s:yank_current)
-  normal! 
-  call setpos('.', s:startpos)
-  echo getpos("'[")
-  echo getpos("']")
+  call s:ReinsertYank()
 
 endfunction
 
@@ -39,24 +46,24 @@ function! s:YankBackwards() abort
   endif
 
   call s:ReselectSection()
-
-  execute 'normal! c' . cutthroat#helper#getreg(s:yank_current)
-  normal! 
-  call setpos('.', s:startpos)
-  echo getpos("'[")
-  echo getpos("']")
-
+  call s:ReinsertYank()
 
 endfunction
 
 function! cutthroat#yankring#enable() abort
   let s:yank_current = 0
 
-  let s:save_ctrl_n = maparg('<c-n>', 'n', v:false, v:true)
-  let s:save_ctrl_p = maparg('<c-p>', 'n', v:false, v:true)
+  if !exists('s:save_ctrl_n')
+    let s:save_ctrl_n = maparg('<c-n>', 'n', v:false, v:true)
+    let s:save_ctrl_p = maparg('<c-p>', 'n', v:false, v:true)
+  endif
 
-  nnoremap <C-n> <cmd>call <sid>YankForwards()<cr>
-  nnoremap <C-p> <cmd>call <sid>YankBackwards()<cr>
+  nnoremap <c-n> <cmd>call <sid>YankForwards()<cr>
+  nnoremap <c-p> <cmd>call <sid>YankBackwards()<cr>
+
+  augroup cutthroat-yankring-checkifstillvalid
+    autocmd!
+  augroup END
 
   augroup cutthroat-yankring-getpos
     autocmd!
@@ -75,16 +82,28 @@ function! s:UpdatePos() abort
 
   augroup cutthroat-yankring-checkifstillvalid
     autocmd!
-    autocmd TextChanged * call <sid>CheckIfStillValid()
+    autocmd TextChanged  * call <sid>CheckIfStillValid()
+    autocmd TextChangedI * call <sid>CheckIfStillValid()
+    autocmd TextChangedP * call <sid>CheckIfStillValid()
   augroup END
 endfunction
 
 
 function! s:CheckIfStillValid() abort
 
-  if s:startpos !=# getpos("'[") || s:endpos !=# getpos("']") || s:regtype !=# getregtpe('"')
-    execute 'nnoremap <C-n> ' . s:save_ctrl_n['rhs']
-    execute 'nnoremap <C-p> ' . s:save_ctrl_p['rhs']
+  if s:startpos !=# getpos("'[") || s:endpos !=# getpos("']") || s:regtype !=# getregtype('"')
+
+    if s:save_ctrl_n  == {}
+      nunmap <c-n>
+    else
+      execute 'n' . (s:save_ctrl_n['noremap'] ? 'noremap' : 'map') . ' <C-n> ' . s:save_ctrl_n['rhs']
+    endif
+
+    if s:save_ctrl_p  == {}
+      nunmap <c-p>
+    else
+      execute 'n' . (s:save_ctrl_p['noremap'] ? 'noremap' : 'map') . ' <C-p> ' . s:save_ctrl_p['rhs']
+    endif
 
     augroup cutthroat-yankring-checkifstillvalid
       autocmd!
