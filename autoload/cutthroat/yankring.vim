@@ -22,6 +22,22 @@ function! s:ReinsertYank() abort
   let s:endpos   = getpos("']")
 endfunction
 
+function! s:RestoreInput() abort
+  call inputrestore()
+endfunction
+
+function! s:PrintCurrentYank() abort
+  call inputsave()
+
+  if s:yank_current <= 9
+    echo 'Current register is "''' . s:yank_current . '"'
+  else
+    let l:letters = 'abcdefghijklmnopqrstuvwxyz'
+    echo 'Current register is "''' . l:letters[s:yank_current - 10] . '"'
+  endif
+
+  call jobstart('sleep 3', { 'on_exit': {a, b, c -> s:RestoreInput() }}) 
+endfunction
 
 function! s:YankForwards() abort
 
@@ -30,6 +46,7 @@ function! s:YankForwards() abort
     let s:yank_current = 0
   endif
 
+  call s:PrintCurrentYank()
   call s:ReselectSection()
   call s:ReinsertYank()
 
@@ -42,6 +59,7 @@ function! s:YankBackwards() abort
     let s:yank_current = g:yankring_size - 1
   endif
 
+  call s:PrintCurrentYank()
   call s:ReselectSection()
   call s:ReinsertYank()
 
