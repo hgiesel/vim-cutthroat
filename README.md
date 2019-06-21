@@ -37,10 +37,37 @@ to `""`, `"0`, and `"a`, it will only write to `"a` and `"-`.
 This makes them stand apart from prefixing a *cut* command,
 which would yank to `""`, `"0`, and `"a`.
 
+## Cutthroat Yank Ring
+
+Cutthroat doesn't do any mappings automatically. Any mappings you
+wish, you'll have to do yourself.
+
+| internal mappings              | suggested mappings |
+| ------------------------------ | ------------------ |
+| `<plug>(CutthroatYankRing_p)   | `p`                |
+| `<plug>(CutthroatYankRing_P)   | `P`                |
+| `<plug>(CutthroatYankRing_gp)  | `gp`               |
+| `<plug>(CutthroatYankRing_gP)  | `gP`               |
+| `<plug>(CutthroatYankRing_v_p) | `v_p`              |
+| `<plug>(CutthroatYankRing_v_P) | `v_P`              |
+
+An example config would be:
+
+```vim
+nmap p <plug>(CutthroatYankRing_p)
+nmap P <plug>(CutthroatYankRing_P)
+
+nmap gp <plug>(CutthroatYankRing_gp)
+nmap gP <plug>(CutthroatYankRing_gP)
+
+xmap p <plug>(CutthroatYankRing_v_p)
+xmap P <plug>(CutthroatYankRing_v_P)
+```
+
 ## Cutthroat Cut Commands
 
 *Cut* commands under the hood just do a yank, followed by the
-"true deletion" command.  They mostly keep the previous behavior
+"true deletion" command.  They imitate keep the previous behavior
 of the vim commmands.
 
 Cutthroat doesn't do any mappings automatically. Any mappings you
@@ -68,21 +95,16 @@ wish, you'll have to do yourself.
 An example config would be:
 
 ```vim
-nnoremap x <plug>(CutthroatDelete)
-nnoremap xx <plug>(CutthroatDeleteLine)
-nnoremap X <plug>(CutthroatDeleteToEOL)
-xnoremap x <plug>(CutthroatDeleteVisual)
+nmap x <plug>(CutthroatDelete)
+nmap xx <plug>(CutthroatDeleteLine)
+nmap X <plug>(CutthroatDeleteToEOL)
+xmap x <plug>(CutthroatDeleteVisual)
 
-nnoremap s <plug>(CutthroatReplace)
-nnoremap ss <plug>(CutthroatReplaceLine)
-nnoremap S <plug>(CutthroatReplaceToEOL)
-xnoremap s <plug>(CutthroatReplaceVisual)
+nmap s <plug>(CutthroatReplace)
+nmap ss <plug>(CutthroatReplaceLine)
+nmap S <plug>(CutthroatReplaceToEOL)
+xmap s <plug>(CutthroatReplaceVisual)
 ```
-
-## Cutthroat Yank Ring
-
-
-
 
 ## Inspirations for this plugin
 
