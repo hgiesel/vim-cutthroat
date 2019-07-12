@@ -115,8 +115,13 @@ function! cutthroat#yankring#enable(mode) abort
       let s:save_ctrl_p = maparg('<c-p>', 'n', v:false, v:true)
     endif
 
-    nnoremap <c-n> <cmd>call <sid>YankForwards()<cr>
-    nnoremap <c-p> <cmd>call <sid>YankBackwards()<cr>
+    if has('nvim-0.3.5')
+      nnoremap <c-n> <cmd>call <sid>YankForwards()<cr>
+      nnoremap <c-p> <cmd>call <sid>YankBackwards()<cr>
+    else
+      nnoremap <c-n> :<c-u>call <sid>YankForwards()<cr>
+      nnoremap <c-p> :<c-u>call <sid>YankBackwards()<cr>
+    endif
 
     augroup cutthroat-yankring-checkifstillvalid
       autocmd!
