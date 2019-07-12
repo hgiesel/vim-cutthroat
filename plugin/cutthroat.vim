@@ -46,6 +46,7 @@ augroup cutthroat
   autocmd VimEnter * call s:CreateYankRing(g:cutthroat#yankring#named_registers_count)
 augroup END
 
+if has('nvim-0.3.5')
 nnoremap <silent> <plug>(CutthroatDelete)
       \ <cmd>call cutthroat#command#prepare('cutthroat#command#delete#normal')<cr>g@
 nnoremap <silent> <plug>(CutthroatDeleteLine)
@@ -96,6 +97,60 @@ xnoremap <plug>(CutthroatYankRing_v_p)
       \ <cmd>call cutthroat#yankring#enable('v_p')<cr>
 xnoremap <plug>(CutthroatYankRing_v_P)
       \ <cmd>call cutthroat#yankring#enable('v_P')<cr>
+
+else
+
+nnoremap <silent> <plug>(CutthroatDelete)
+      \ :<c-u>call cutthroat#command#prepare('cutthroat#command#delete#normal')<cr>g@
+nnoremap <silent> <plug>(CutthroatDeleteLine)
+      \ :<c-u>call cutthroat#command#delete#line()<cr>
+nnoremap <silent> <plug>(CutthroatDeleteToEOL)
+      \ :<c-u>call cutthroat#command#delete#toEOL()<cr>
+xnoremap <silent> <plug>(CutthroatDeleteVisual)
+      \ :<c-u>call cutthroat#command#delete#normal(visualmode(), v:true)<cr>
+
+nnoremap <silent> <plug>(CutthroatChange)
+      \ :<c-u>call cutthroat#command#prepare('cutthroat#command#change#normal')<cr>g@
+nnoremap <silent> <plug>(CutthroatChangeLine)
+      \ :<c-u>call cutthroat#command#change#line()<cr>
+nnoremap <silent> <plug>(CutthroatChangeToEOL)
+      \ :<c-u>call cutthroat#command#change#toEOL()<cr>
+xnoremap <silent> <plug>(CutthroatChangeVisual)
+      \ :<c-u>call cutthroat#command#change#normal(visualmode(), v:true)<cr>
+
+nnoremap <silent> <plug>(CutthroatReplace)
+      \ :<c-u>call cutthroat#command#prepare('cutthroat#command#replace#normal')<cr>g@
+nnoremap <silent> <plug>(CutthroatReplaceLine)
+      \ :<c-u>call cutthroat#command#replace#line()<cr>
+nnoremap <silent> <plug>(CutthroatReplaceToEOL)
+      \ :<c-u>call cutthroat#command#replace#toEOL()<cr>
+xnoremap <silent> <plug>(CutthroatReplaceVisual)
+      \ :<c-u>call cutthroat#command#replace#normal(visualmode(), v:true)<cr>
+
+nnoremap <silent> <plug>(CutthroatExchange)
+      \ :<c-u>call cutthroat#command#prepare('cutthroat#command#exchange#normal')<cr>g@
+nnoremap <silent> <plug>(CutthroatExchangeLine)
+      \ :<c-u>call cutthroat#command#exchange#line()<cr>
+nnoremap <silent> <plug>(CutthroatExchangeToEOL)
+      \ :<c-u>call cutthroat#command#exchange#toEOL()<cr>
+xnoremap <silent> <plug>(CutthroatExchangeVisual)
+      \ :<c-u>call cutthroat#command#exchange#normal(visualmode(), v:true)<cr>
+
+nnoremap <plug>(CutthroatYankRing_p)
+      \ :<c-u>call cutthroat#yankring#enable('p')<cr>
+nnoremap <plug>(CutthroatYankRing_P)
+      \ :<c-u>call cutthroat#yankring#enable('P')<cr>
+
+nnoremap <plug>(CutthroatYankRing_gp)
+      \ :<c-u>call cutthroat#yankring#enable('gp')<cr>
+nnoremap <plug>(CutthroatYankRing_gP)
+      \ :<c-u>call cutthroat#yankring#enable('gP')<cr>
+
+xnoremap <plug>(CutthroatYankRing_v_p)
+      \ :<c-u>call cutthroat#yankring#enable('v_p')<cr>
+xnoremap <plug>(CutthroatYankRing_v_P)
+      \ :<c-u>call cutthroat#yankring#enable('v_P')<cr>
+endif
 
 command! ClearRegisters call cutthroat#helper#clear_registers()
 command! ClearYankRing call cutthroat#helper#clear_yankring()
