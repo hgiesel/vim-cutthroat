@@ -67,8 +67,8 @@ function! s:YankForwards() abort
     let s:yank_current = 0
   endif
 
-  call s:PrintCurrentYankOnCmdline()
   call s:ReinsertYank()
+  call s:PrintCurrentYankOnCmdline()
 endfunction
 
 function! s:YankBackwards() abort
