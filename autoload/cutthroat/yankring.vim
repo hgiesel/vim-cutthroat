@@ -53,6 +53,8 @@ function! s:ReinsertYank() abort
 endfunction
 
 function! s:PrintCurrentYankOnCmdline() abort
+  redraw
+
   if s:yank_current <= 9
     echo 'Current register is "''' . s:yank_current . '"'
   else
@@ -77,8 +79,8 @@ function! s:YankBackwards() abort
     let s:yank_current = g:yankring_size - 1
   endif
 
-  call s:PrintCurrentYankOnCmdline()
   call s:ReinsertYank()
+  call s:PrintCurrentYankOnCmdline()
 endfunction
 
 function! cutthroat#yankring#enable(mode) abort
