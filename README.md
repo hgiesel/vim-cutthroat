@@ -1,5 +1,15 @@
 # cutthroat.nvim
 
+Fact1: vim's system of copy/paste kinda sucks
+Fact2:
+* s is identical to cl (c command)
+* S is identical to cc (c command)
+* x is identical to dl (d command)
+* X is identical to dh (d command)
+
+This creates ambiguity in usage, at some point:
+* this will replace sSxX
+
 A simple plugin implementing cutlass-mode.
 
 1. [Cutthroat Cutlass mode](#cutthroat-cutlass-mode)
